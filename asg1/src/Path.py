@@ -9,8 +9,8 @@ end_point_x,end_point_y = (22.7,22.5)
 N = 20
 
 #Creaing x and y axis
-x_axis = np.linspace(start_point_x,end_point_x,N)
-y_axis = np.linspace(start_point_y,end_point_y,N)
+x_axis = np.linspace(start_point_x,end_point_y,N)
+y_axis = np.linspace(start_point_x,end_point_y,N)
 
 #Creating Circular Obstacles (More Ecliples then circles)
 Ob1 = plt.Circle(( 19.0 , 19.0), 1.5,color="darkorange",zorder=2)
