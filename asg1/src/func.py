@@ -31,5 +31,20 @@ def gradient_eclideannorm(x:np.array):
    return grad(x)
 
 
-def func_smooth(D,x):
-   
+#Creating the datastructurer of a circle, we need its position and radius
+
+ob = [(( 19.0 , 19.0), 1), (( 5.0 , 5.0), 1)]
+#print(len(ob)) has the size of two
+
+
+def detector(x:np.array,cir):
+   """ Helper function which measure the distance between obstacle
+   and tracjectory point"""
+
+   return np.linalg.norm(x - cir[0])
+    
+      
+
+
+def Obstacle_func(x:np.array):
+   pass 
