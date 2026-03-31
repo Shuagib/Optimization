@@ -7,16 +7,10 @@ a = np.linspace(0,20,20)
 b = np.linspace(0,20,20)
 n2_array = np.column_stack((a,b))
 
-#def func_euclidean2(x: np.ndarray):
-"""Function Lp Norm 2  collapsing over the coloums and taking the sum of each next point and current.
-       This creates A vector of size (n-1,2)"""
-    #return np.sum(np.sum(np.pow(x[1:] - x[:-1],2)))
-
 
 def func_eclideannorm(x:np.array):
    """ This function is the Lp norm 2 and takes the difference  squared and sums 
-   them for all x_n points in the trajectory
-   Takes a vector as input and Returns a scalar"""
+   them for all x_n points in the trajectory. It calculate the path lenght """
    result = 0
    N = len(x)
    for i in range(N-1):
@@ -50,7 +44,7 @@ def detector(x:np.array,obj):
 
 
 def pentality_func(x:np.array, obj):
-   """ Obstacle model that add penality large penality if we are close the obstacles and small if we are far away.
+   """ Obstacle Model that add penality large penality if we are close the obstacles and small if we are far away.
          Returns a penality score """
    N = len(x) # The lenght of the matrix
    penalty = 0 #Pentalty
@@ -68,3 +62,7 @@ def pentality_func(x:np.array, obj):
    return penalty
          
 
+def gradient_p(x:np.array,obj):
+   """ Gradient of Obstacle Model"""
+   grad = tp.autograd.grad(pentality_func)
+   return grad(x,obj)
