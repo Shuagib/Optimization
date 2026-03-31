@@ -4,7 +4,7 @@ import torch as tp
 import math as ma
 
 
-def func_eclideannorm(x:np.array):
+def f_L(x:np.array):
    """ This function is the Lp norm 2 and takes the difference  squared and sums 
    them for all x_n points in the trajectory. It calculate the path lenght """
    result = 0
@@ -17,10 +17,10 @@ def func_eclideannorm(x:np.array):
    
 
 
-def gradient_eclideannorm(x:np.array):
+def gradientf_L(x:np.array):
    """ Take the gradient of Lp 2 norm. Uses Autograd from Torch.
    Takes the function as input and returns its derivate with respect to x"""
-   grad = tp.autograd.grad(func_eclideannorm)
+   grad = tp.autograd.grad(f_L)
    return grad(x) #Gradient Lp norm 2
 
 
@@ -36,7 +36,7 @@ def detector(x:np.array,obj):
 
 
 
-def pentality_func_1(x:np.array, obj):
+def f_O(x:np.array, obj):
    """ Obstacle Model that add penality large penality if we are close the obstacles and small if we are far away.
          Returns a penality score """
    N = len(x) # The lenght of the matrix
@@ -55,13 +55,13 @@ def pentality_func_1(x:np.array, obj):
    return penalty
          
 
-def gradient_p(x:np.array,obj):
+def gradientf_O(x:np.array,obj):
    """ Gradient of Obstacle Model"""
-   grad = tp.autograd.grad(pentality_func_1)
+   grad = tp.autograd.grad(f_O)
    return grad(x,obj)
 
 
-def pentality_func_2(x:np.array,obj,alpha=0.01):
+def f_O_2(x:np.array,obj,alpha=0.01):
    """ Obstacle model. The second penalty"""
    N = len(x)
    penalty = 0 
@@ -75,10 +75,17 @@ def pentality_func_2(x:np.array,obj,alpha=0.01):
          j+=1 
    return penalty
 
-def gradient_penalty_2(x:np.array,obj,alpha=0.01):
+def gradient_f_O_2(x:np.array,obj,alpha=0.01):
    """ Gradient for obstacle model 2 """
-   grad = tp.autograd.grad(pentality_func_2)
+   grad = tp.autograd.grad(f_O_2)
    return grad(x,obj,alpha)
+
+
+def objective_function(x:np.array,obj,𝜆, alpha: 0.01, 𝜇 ):
+   """ Objective function waiting on Anne to be done with the second function"""
+   ob_func = f_L(x) + 𝜆 * None + 𝜇 * f_O(x,obj)
+   ob_grad = gradientf_L(x) + 𝜆* None + 𝜇  * gradient_f_O_2(x,obj)
+   return (ob_func,ob_grad)
 
 
 """ Testing the different functions to check it returns stable values"""
