@@ -12,12 +12,14 @@ from F_O import f_O, f_O_2,gradient_f_O_2,gradientf_O
 
 
 
-def objective_function(x:np.array,obj,𝜆, alpha: 0.01, 𝜇 ):
+def objective_function(x:np.array,obj,lam, mu ):
    """ Objective function waiting on Anne to be done with the second function"""
-   ob_func = f_L(x) + 𝜆 * None + 𝜇 * f_O(x,obj)
-   ob_grad = gradientf_L(x) + 𝜆* None + 𝜇  * gradient_f_O_2(x,obj)
-   return (ob_func,ob_grad)
+   ob_func = f_L(x) + lam * 0 + mu * f_O(x,obj)
+   return ob_func
 
+def gradient_objectivefunc(x:np.array,obj,lam, mu ):
+       ob_grad = gradientf_L(x) + lam * 0 + mu  * gradient_f_O_2(x,obj)
+       return ob_grad
 
 """ Testing the different functions to check it returns stable values"""
 #Creating a tester for the functions
