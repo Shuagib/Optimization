@@ -63,3 +63,10 @@ result_ls = least_squares(
 
 print(f"Success: {result_ls.success}")
 print(f"Final cost: {result_ls.cost:.4f}")
+
+# from scipy.optimize import curve_fit
+
+# def f(x, A, B): # this is your 'straight line' y=f(x)
+#     return A*x + B
+
+# popt, pcov = curve_fit(f, x, y) # your data x, y to fit
