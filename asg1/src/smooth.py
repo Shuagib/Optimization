@@ -45,7 +45,6 @@ x0 = flatten(x_init)
 # second_diff = D @ x = (n-2, 2)
 #return second_diff.flatten()  --> 1D vector
 
-
 def smoothness_residuals(x_flat, n, x_start, x_goal, D):
     x = unflatten(x_flat, n, x_start, x_goal)
     second_diff = D @ x           
@@ -56,24 +55,17 @@ def smoothness_value(x, D):
     return np.sum(Dx**2)
 
 
-x0 = flatten(x_init)
 
-result_ls = least_squares(
-    smoothness_residuals,
-    x0,
-    method='trf',
-    verbose=1
-)
-
+def least_squares_func(smoothness_residuals, x0, n, x_start, x_goal, D, method='trf', verbose=1):
+    result = least_squares(
+        lambda x_flat: smoothness_residuals(x_flat, n, x_start, x_goal, D),
+        x0,
+        method=method,
+        verbose=verbose
+    )
+    return result
 
 def gradient_smoothness(x_flat, n, x_start, x_goal, D):
     x    = unflatten(x_flat, n, x_start, x_goal) 
     grad = 2 * D.T @ D @ x                         
     return grad[1:-1].flatten()   
-
-# from scipy.optimize import curve_fit
-
-# def f(x, A, B): # this is your 'straight line' y=f(x)
-#     return A*x + B
-
-# popt, pcov = curve_fit(f, x, y) # your data x, y to fit
