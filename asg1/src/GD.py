@@ -19,7 +19,7 @@ class GradientDescent(DescentMethod):
            
 
     def step(self):
-        """ Descent method """
+        """Compute the next design point according to:"""
         grad = gradient_objectivefunc(self.x,self.obj,self.lam,self.mu)
         self.x = self.x - self.alpha * grad
         return self.x

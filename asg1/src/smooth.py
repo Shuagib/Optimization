@@ -68,4 +68,4 @@ def least_squares_func(smoothness_residuals, x0, n, x_start, x_goal, D, method='
 def gradient_smoothness(x_flat, n, x_start, x_goal, D):
     x    = unflatten(x_flat, n, x_start, x_goal) 
     grad = 2 * D.T @ D @ x                         
-    return grad[1:-1].flatten()   
+    return grad[1:-1].flatten() 

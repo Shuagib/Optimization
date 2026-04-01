@@ -24,7 +24,7 @@ class Conjugate_Gradient(DescentMethod):
         
 
     def step(self):
-        """ Descent direction method using Conjugate Gradient method"""
+        """Compute the next design point according to:"""
         alpha = backtracking_line_search(self.f,self.grad,self.x,self.d,self.alpha) #Using bracktracking search for finding best alpha
         self.x = self.x + alpha * self.d #Updating rule  for next position x 
         r_prev = self.r.copy() #old Gradient
@@ -34,6 +34,7 @@ class Conjugate_Gradient(DescentMethod):
         return self.x,alpha
     
     def opt(self, iteration):
+        """ Optimizer for using Conjugate method to find optimial design point"""
         x_points = []
         func_values = []
         a_array = []
