@@ -21,7 +21,7 @@ class GradientDescent(DescentMethod):
         return self.x
     
 
-    def optimize(self, obj, max_iter):
+    def opt(self, obj, max_iter):
         x_poins = []
         f_values = []
         for k in range(max_iter):
