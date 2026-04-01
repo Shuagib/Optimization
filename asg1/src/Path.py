@@ -15,6 +15,7 @@ y_axis = np.linspace(start_point_x,end_point_y,N)
 # Creating path as an (n,2) Array
 path = np.column_stack((x_axis,y_axis))
 
+print(path)
 #Creating Circular Obstacles (More Ecliples then circles)
 Ob1 = plt.Circle(( 16.0 , 19.0), 1,color="darkorange",zorder=2)
 Ob2 = plt.Circle(( 6.0 , 7.0), 1,color="darkorange", zorder= 2)
