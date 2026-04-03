@@ -25,18 +25,23 @@ class GradientDescent(DescentMethod):
         return self.x
     
 
-    def opt(self, iteration):
+    def opt(self,kmax):
         """ Gradient descent for using Conjugate method to find optimial design point"""
         x_poins = []
         f_values = []
+        k = 0
+        ep = 0.001
 
-        for k in range(iteration):
+        while k < kmax: 
             f_values.append(objective_function(self.x, self.obj, self.lam, self.mu))
             x_poins.append(self.x.copy())
             x_old = self.x.copy()
-            self.step(self.obj)
-            if np.linalg.norm(self.x - x_old) <= 0.001:
+            self.x = self.step(self.obj)
+            f_new = objective_function(self.x, self.obj, self.lam, self.mu)
+            f_old = objective_function(x_old, self.obj, self.lam, self.mu)
+            if f_old - f_new < ep * np.linalg.norm(f_old):
                 break
+            k +=1 
         return self.x, x_poins, f_values
 
 

@@ -9,12 +9,6 @@ import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.animation as animation
 
-start_point_x, start_point_y = (0.0, 0.0)
-end_point_x,   end_point_y   = (22.4, 22.4)
-
-x_start = np.array([start_point_x, start_point_y])
-x_goal  = np.array([end_point_x,   end_point_y])
-
 
 # def objective_function(x:np.array,obj,lam, mu ):
 #    """ Objective function waiting on Anne to be done with the second function"""
@@ -38,6 +32,14 @@ def gradient_objective(x_flat, n, x_start, x_goal, D, obj, lam, mu):
 
 
 """ Testing the different functions to check it returns stable values"""
+
+start_point_x, start_point_y = (0.0, 0.0)
+end_point_x,   end_point_y   = (22.4, 22.4)
+
+x_start = np.array([start_point_x, start_point_y])
+x_goal  = np.array([end_point_x,   end_point_y])
+
+
 a = np.linspace(0,20,20)
 b = np.linspace(0,20,20)
 n2_array = np.column_stack((a,b))
@@ -47,9 +49,9 @@ ob_main = [(( 16.0 , 19.0), 3.14), (( 6.0 , 7.0), 2.19)]
 ob_second = [((16.0, 5.0), 2.0), ((4.0, 15.0), 2.0)]
 
 
-print(f_L(n2_array)) #Returns 42.105
-print(f_O(n2_array,ob_main)) #Returning inf, since it goes through the points
-print(f_O(n2_array,ob_second)) #returnes 0.6064
-print(f_O_2(n2_array,ob_main)) #Returns a highere penalty 20.55
-print(f_O_2(n2_array,ob_second)) #Returns a lowere penalty 13.049
+# print(f_L(n2_array)) #Returns 42.105
+# print(f_O(n2_array,ob_main)) #Returning inf, since it goes through the points
+# print(f_O(n2_array,ob_second)) #returnes 0.6064
+# print(f_O_2(n2_array,ob_main)) #Returns a highere penalty 20.55
+# print(f_O_2(n2_array,ob_second)) #Returns a lowere penalty 13.049
 

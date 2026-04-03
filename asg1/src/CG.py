@@ -33,21 +33,22 @@ class Conjugate_Gradient(DescentMethod):
         self.d = self.r + beta * self.d  #New descnt direction given our negative gradient, difference  (Beta) and old descent direction
         return self.x,alpha
     
-    def opt(self, iteration):
+    def opt(self, kmax):
         """ Optimizer for using Conjugate method to find optimial design point"""
         x_points = []
         func_values = []
         a_array = []
-        j = 0
-        while j < iteration:
+        i = 0
+        ep = 0.001
+        while i < kmax #Determination method if the new postion and old postion has very little divergence then step
             func_values.append(objective_function(self.x, self.obj, self.lam, self.mu)) #Function value
             x_points.append(self.x.copy()) #current Positions append in a list 
             x_old = self.x.copy() #old posistion
             self.x, self.alpha = self.step() #compute the current position and alpha step
             a_array.append(self.alpha ) #Keep the alphas 
-            if np.linalg.norm(self.x - x_old) <= 0.001: #Determination method if the new postion and old postion has very little divergence then step
-                break
-            j +=1 
+            if np.linalg.norm(self.x - x_old) <= ep: 
+                break 
+            i +=1 
         return self.x, a_array ,x_points,func_values #Return current position, alphas list, x position, function values
 
 

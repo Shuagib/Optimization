@@ -31,17 +31,32 @@ class Quasi_NewtonMethod(DescentMethod):
         
     def DFP(self):
         """ Using Davidon-Fletcher-Powell (DFP) method """
-        search_direction = -self.Q @ self.nabla(self.x_flat) #Computing the search direction
-        alpha_lo, rejected, tried_alpha = strong_backtracking(func,nabla,self.x_flat,search_direction,self.alpha) #Getting the fist alpha
-        new_x = self.x_flat + alpha_lo *search_direction
+        d = -self.Q @ self.nabla(self.x_flat) #Computing the search direction
+        alpha_lo, rejected, tried_alpha = strong_backtracking(self.func,self.nabla,self.x_flat,d,self.alpha) #Getting the fist alpha
+        new_x = self.x_flat + alpha_lo *d 
         delta  = new_x - self.x_flat
         gamma  = self.nabla(new_x) - self.nabla(self.x_flat)
-        Q_new = (self.Q - np.outer(self.Q @ gamma, self.Q @ gamma) / np.dot(gamma, self.Q @ gamma) + np.outer(delta, delta) / np.dot(delta, gamma))   #approximating our matrix using np.outer since we are creating matrix and np.dot to create scalars
+        Q_new = (self.Q - np.outer(self.Q @ gamma, np.transpose(self.Q) @ gamma) / np.dot(gamma, self.Q @ gamma) + np.outer(delta, delta) / np.dot(delta, gamma))   #approximating our matrix using np.outer since we are creating matrix and np.dot to create scalars
         self.Q = Q_new 
         self.x_flat = new_x 
         return self.x_flat, alpha_lo,rejected,tried_alpha
     
-    def opt_1(self,kmax=10,ep=0.001):
+
+    def BFGS(self):
+        d = -self.Q @ self.nabla(self.x_flat) #Computing the search direction
+        alpha_lo, rejected, tried_alpha = strong_backtracking(self.func,self.nabla,self.x_flat,d,self.alpha) #Getting the fist alpha
+        new_x = self.x_flat + alpha_lo *d 
+        delta  = new_x - self.x_flat
+        gamma  = self.nabla(new_x) - self.nabla(self.x_flat)
+        Q_new = self.Q - (np.dot(np.outer(delta,gamma), self.Q) + np.dot(self.Q, np.outer(gamma,delta))) /np.dot(delta,gamma) + (1 + np.dot(gamma, np.dot(self.Q,gamma))/np.dot(delta,gamma)) * (np.outer(delta,delta))/np.dot(delta,gamma)
+        self.Q = Q_new
+        self.x_flat = new_x 
+        return self.x_flat, alpha_lo,rejected,tried_alpha
+    
+
+
+    
+    def opt_DFP(self,kmax=20,ep=0.001):
         x_point = []
         f_value = []
         k = 0
@@ -55,6 +70,25 @@ class Quasi_NewtonMethod(DescentMethod):
             if k >= kmax:
                 break 
         return self.x_flat, alpha, x_point,f_value #Returns a lost of given x points that one have traveled, good enough alphas, All the old positiosns and function values 
+    
+
+    def opt_BFGS(self,kmax=20,ep=0.001):
+        x_point = []
+        f_value = []
+        k = 0
+        while np.linalg.norm(self.g) > ep: #Convergences rate
+            f_value.append(self.func(self.x_flat)) #Function values
+            x_point.append(self.x_flat.copy()) #Keeping track of all the tracjectories
+            self.x_flat, alpha = self.BFGS()
+            self.g = self.nabla(self.x_flat)
+            k +=1 
+            #We are running 10 iteration as standard, 
+            if k >= kmax:
+                break 
+        return self.x_flat, alpha, x_point,f_value #Returns a lost of given x points that one have traveled, good enough alphas, All the old positiosns and function values 
+
+
+
 
 
 
