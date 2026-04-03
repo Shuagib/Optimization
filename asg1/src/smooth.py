@@ -56,7 +56,7 @@ def smoothness_value(x, D):
 
 
 
-def least_squares_func(smoothness_residuals, x0, n, x_start, x_goal, D, method='trf', verbose=1):
+def least_squares_func(x0, n, x_start, x_goal, D, method='trf', verbose=1):
     result = least_squares(
         lambda x_flat: smoothness_residuals(x_flat, n, x_start, x_goal, D),
         x0,
