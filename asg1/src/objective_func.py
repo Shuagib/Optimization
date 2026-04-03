@@ -4,7 +4,7 @@ import torch as tp
 import math as ma
 from F_L import f_L,gradientf_L
 from F_O import f_O, f_O_2,gradient_f_O_2,gradientf_O
-from smooth import smoothness_value, smoothness_residuals, gradient_smoothness, least_squares_func, build_D, flatten, unflatten
+from smooth import * #smoothness_residuals, gradient_smoothness, least_squares_func, build_D, flatten, unflatten
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.animation as animation
@@ -38,7 +38,6 @@ def gradient_objective(x_flat, n, x_start, x_goal, D, obj, lam, mu):
 
 
 """ Testing the different functions to check it returns stable values"""
-#Creating a tester for the functions
 a = np.linspace(0,20,20)
 b = np.linspace(0,20,20)
 n2_array = np.column_stack((a,b))
