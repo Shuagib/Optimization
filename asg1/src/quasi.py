@@ -54,7 +54,7 @@ class Quasi_NewtonMethod(DescentMethod):
             #We are running 10 iteration as standard, 
             if k >= kmax:
                 break 
-        return self.x_flat, alpha, x_point,f_value
+        return self.x_flat, alpha, x_point,f_value #Returns a lost of given x points that one have traveled, good enough alphas, All the old positiosns and function values 
 
 
 
