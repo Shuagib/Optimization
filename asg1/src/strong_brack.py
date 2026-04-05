@@ -1,4 +1,4 @@
-
+import numpy as np
 
 def strong_backtracking(f, nabla, x, d, alpha=1, beta=1e-4, sigma=0.1):
     y0, g0, y_prev, alpha_prev = f(x), nabla(x) @ d, None, 0

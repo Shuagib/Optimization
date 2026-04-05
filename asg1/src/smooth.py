@@ -31,11 +31,11 @@ def flatten(x):
     return x[1:-1].flatten()
 
 def unflatten(x_flat, n, x_start, x_goal):
-    inside = x_flat.reshape(n-2, 2)
+    inside = x_flat.np.reshape(n-2, 2)
     return np.vstack([
-        x_start.reshape(1, 2),
+        x_start.np.reshape(1, 2),
         inside,  
-        x_goal.reshape(1, 2)
+        x_goal.np.reshape(1, 2)
     ])
 
 #Goes from shape (1, 2) to shape (n-2, 2) to shape (1, 2) to shape (n, 2)
