@@ -1,6 +1,6 @@
 import torch.autograd as ta
 import numpy as np
-from objective_func import gradient_objectivefunc, objective_function,gradient_objective,objective_function
+from objective_func import gradient_objective, objective_function,gradient_objective,objective_function
 import numpy as np
 from strong_brack import strong_backtracking
 class DescentMethod:

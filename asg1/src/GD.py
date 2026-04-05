@@ -1,4 +1,4 @@
-from objective_func import gradient_objectivefunc, objective_function
+from objective_func import gradient_objective, objective_function
 import numpy as np
 from Bt_LineSearch import backtracking_line_search
 class DescentMethod:
@@ -26,7 +26,7 @@ class GradientDescent(DescentMethod):
     def step(self):
         """Compute the next design point according to:"""
         alpha = backtracking_line_search(self.f,grad,self.x,-grad,self.alpha)
-        grad = gradient_objectivefunc(self.x,self.obj,self.lam,self.mu)
+        grad = gradient_objective(self.x,self.obj,self.lam,self.mu)
         self.x = self.x - self.alpha * grad
         return self.x, alpha
     
