@@ -2,7 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 #Choose start and Goal
-start_point_x,start_point_y = (0.0,0.0)
+start_point_x,start_point_y = (0.5,0.0)
 end_point_x,end_point_y = (19.0,22.0)
 
 #Amount of Points 
