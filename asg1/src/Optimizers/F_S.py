@@ -1,14 +1,7 @@
 import numpy as np
 from scipy.optimize import least_squares
 import torch as tp
-from Path import start_point_x,end_point_x,end_point_y,start_point_y,N
 
-
-x_start = np.array([start_point_x, start_point_y])
-x_goal  = np.array([end_point_x,   end_point_y])
-
-# straight line initial
-x_init = np.linspace(x_start, x_goal, N) 
 
 # MATRIX D given in the assingment
 
@@ -20,7 +13,7 @@ def build_D(n):
         D[i, i+2] =  1
     return D
 
-D = build_D(N)
+
 
 #Shape the dimensions
 def flatten(x):
@@ -50,7 +43,6 @@ def unflatten(x_flat, n, x_start, x_goal):
 
 #Goes from shape (1, 2) to shape (n-2, 2) to shape (1, 2) to shape (n, 2)
 
-x0 = flatten(x_init)
 
 # second_diff = D @ x = (n-2, 2)
 #return second_diff.flatten()  --> 1D vector

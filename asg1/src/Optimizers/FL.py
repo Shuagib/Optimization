@@ -13,10 +13,7 @@ def func_L(x):
         result += an.sum(squared)
     return result 
 
+grad_func_L = grad(func_L)   
 
 def gradientf_L(x):
-    """ Take the gradient of Lp 2 norm. Uses Autograd from Torch.
-    Takes the function as input and returns its derivate with respect to x"""
-    grad = grad(func_L)
-    return grad(x) #Gradient Lp norm 2
-
+    return grad_func_L(x) 

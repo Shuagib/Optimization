@@ -6,7 +6,7 @@ import math as ma
 import numpy as np
 
 
-def detector(x, obj):
+def detector(x:an.array, obj):
    """ Measures distance between a point and the center of a obstacle """
    c = obj[0] #Getting the coordinates 
    return an.linalg.norm(x - c)
@@ -30,7 +30,7 @@ def f_O(x:an.array, obj):
          i += 1 
    return penalty
 
-def f_O_2(x: an.array,obj,alpha=0.01):
+def f_O_2(x: an.array,obj,alpha=2.0):
    """ Obstacle model. The second penalty"""
    N = len(x)
    penalty = 0 
@@ -45,16 +45,11 @@ def f_O_2(x: an.array,obj,alpha=0.01):
    return penalty
 
 
-def gradient_f_O_1(x:an.array,obj):
-   """ Gradient for obstacle model 2 """
-   grad_f0_1 = grad(f_O)
-   return grad_f0_1(x,obj)
+grad_f_O_1 = grad(f_O)
+grad_f_O_2 = grad(f_O_2)
 
+def gradient_f_O_1(x, obj):
+    return grad_f_O_1(x, obj)
 
-
-def gradient_f_O_2(x:an.array,obj):
-   """ Gradient for obstacle model 2 """
-   grad_f0_2 = grad(f_O_2)
-   return grad_f0_2(x,obj,alpha=0.01)
-
-
+def gradient_f_O_2(x, obj, alpha=0.01):
+    return grad_f_O_2(x, obj, alpha)

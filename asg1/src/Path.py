@@ -28,5 +28,5 @@ ax.add_patch(Ob1)
 ax.add_patch(Ob2)
 ax.plot(start_point_x,start_point_y,'s', color='black')
 ax.plot(end_point_x,end_point_y,'s', color='black')
-plt.show()
+#plt.show()
 
