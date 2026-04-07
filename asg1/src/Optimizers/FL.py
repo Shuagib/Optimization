@@ -1,6 +1,7 @@
 from autograd import grad
 import autograd.numpy as an
 
+
 def func_L(x):
     """ This function is the Lp norm 2 and takes the difference  squared and sums 
     them for all x_n points in the trajectory. It calculate the path lenght """
@@ -19,6 +20,3 @@ def gradientf_L(x):
     grad = grad(func_L)
     return grad(x) #Gradient Lp norm 2
 
-
-def manually(x):
-    

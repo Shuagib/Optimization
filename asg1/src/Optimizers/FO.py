@@ -58,10 +58,3 @@ def gradient_f_O_2(x:an.array,obj):
    return grad_f0_2(x,obj,alpha=0.01)
 
 
-
-def manually_FO_2(x):
-
-
-def manually_FO_1(x):
-
-    
