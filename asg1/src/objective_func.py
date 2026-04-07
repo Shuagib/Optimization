@@ -8,6 +8,7 @@ from smooth import smoothness_residuals, gradient_smoothness, least_squares_func
 from Path import path
 from Bt_LineSearch import backtracking_line_search
 
+
 def objective_function(x_flat, n, x_start, x_goal, D, obj, lam, mu):
     x = unflatten(x_flat, n, x_start, x_goal)
     ob_func = f_L(x) + lam * np.sum(smoothness_residuals(x_flat, n, x_start, x_goal, D)**2) + mu * f_O(x, obj)

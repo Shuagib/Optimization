@@ -56,6 +56,7 @@ x0 = flatten(x_init)
 #return second_diff.flatten()  --> 1D vector
 
 def smoothness_residuals(x_flat, n, x_start, x_goal, D):
+    """ Transform the linear transformation on the """
     x = unflatten(x_flat, n, x_start, x_goal)
     second_diff = D @ x           
     return second_diff.flatten()  

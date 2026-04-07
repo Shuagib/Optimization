@@ -77,63 +77,6 @@ def gradient_f_O_2(x_np, obj, alpha=0.01):
     return grad_np
 
 
-# def f_O(x:np.array, obj):
-#    """ Obstacle Model that add penality large penality if we are close the obstacles and small if we are far away.
-#          Returns a penality score """
-#    N = len(x) # The lenght of the matrix
-#    penalty = 0 #Pentalty
-#    for y in obj: #Loop through each tuple
-#       r  = y[1] #Get the radius
-#       i = 0 # Control variable 
-#       while i < N: #Continues running as long we are i are smaller then the lenght
-#          dis = detector(x[i],y)  #Creating penalty givn each trajcectory and object
-#          if dis > r: #First condtion measure how if we are far enough away
-#             dis_diff_pow = np.pow(dis-r,2)  #add square it
-#             penalty += 1/dis_diff_pow #Add small penalty since it since we are far awy
-#          else:
-#             penalty += ma.inf #Reaches the obstacle need large penality
-#          i += 1 
-#    return penalty
-
-# def f_O_2(x:np.array,obj,alpha=0.01):
-#    """ Obstacle model. The second penalty"""
-#    N = len(x)
-#    penalty = 0 
-#    a = alpha
-#    for y in obj:
-#       r = y[1]
-#       j = 0
-#       while j < N:
-#          dis = detector(x[j],y)
-#          penalty += ma.exp(-a *(dis**2 - r**2))
-#          j+=1 
-#    return penalty
-
-# def gradient_f_O_2(x:np.array,obj,alpha=0.01):
-#    """ Gradient for obstacle model 2 """
-#    grad = tp.autograd.grad(f_O_2)
-#    return grad(x,obj,alpha)
-
-# def f_O(x: tp.Tensor, obj):
-#     """ 
-#     Obstacle Model with Infinite Penalty.
-#     x: (N, 2) tensor of coordinates
-#     obj: list of (center_array, radius)
-#     """
-#     penalty = tp.tensor(0.0, dtype=tp.float64)
-#     for center_np, r in obj:
-#         center = tp.tensor(center_np, dtype=tp.float64)
-#         # Calculate Euclidean distance for all points
-#         dist = tp.norm(x - center, dim=1)
-        
-#         # If any point is inside the radius, the whole path is 'Infinite' cost
-#         if tp.any(dist <= r):
-#             return tp.tensor(float('inf'), dtype=tp.float64)
-        
-#         # Otherwise, add the 'Far Away' penalty: 1 / (dist - r)^2
-#         penalty += tp.sum(1.0 / tp.pow(dist - r, 2))
-        
-#     return penalty
 
 def gradientf_O(x_np: np.array, obj):
     """ Gradient that handles the Infinite Wall """
@@ -149,3 +92,26 @@ def gradientf_O(x_np: np.array, obj):
     # If not infinite, use autograd normally
     grad_out = tp.autograd.grad(penalty, x_torch)[0]
     return grad_out.detach().numpy()
+
+
+
+def f_O(x: tp.Tensor, obj):
+    """ 
+    Obstacle Model with Infinite Penalty.
+    x: (N, 2) tensor of coordinates
+    obj: list of (center_array, radius)
+    """
+    penalty = tp.tensor(0.0, dtype=tp.float64)
+    for center_np, r in obj:
+        center = tp.tensor(center_np, dtype=tp.float64)
+        # Calculate Euclidean distance for all points
+        dist = tp.norm(x - center, dim=1)
+        
+        # If any point is inside the radius, the whole path is 'Infinite' cost
+        if tp.any(dist <= r):
+            return tp.tensor(float('inf'), dtype=tp.float64)
+        
+        # Otherwise, add the 'Far Away' penalty: 1 / (dist - r)^2
+        penalty += tp.sum(1.0 / tp.pow(dist - r, 2))
+        
+    return penalty

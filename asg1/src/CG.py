@@ -2,6 +2,7 @@ from objective_func import gradient_objective, objective_function
 import numpy as np
 from Bt_LineSearch import  backtracking_line_search
 from smooth import flatten as fl
+import autograd.numpy as an
 
 class DescentMethod:
     alpha : float 
@@ -9,7 +10,7 @@ class DescentMethod:
 
 class Conjugate_Gradient(DescentMethod):
     """ Conjugate Gradient method uses bracktracking line search for finding the best alpha"""
-    def __init__(self,x:np.array,alpha:float,lam: float,mu:float,obj,f, grad):
+    def __init__(self,x:an.array,alpha:float,lam: float,mu:float,obj,f, grad):
         self.alpha = alpha
         self.lam = lam
         self.mu = mu

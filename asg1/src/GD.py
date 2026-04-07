@@ -1,6 +1,8 @@
 from objective_func import gradient_objective, objective_function
 import numpy as np
 from Bt_LineSearch import backtracking_line_search
+import autograd.numpy as an
+
 class DescentMethod:
     alpha : float 
 

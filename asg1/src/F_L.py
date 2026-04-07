@@ -5,8 +5,7 @@ import math as ma
 
 def f_L(x):
     # Convert numpy array to torch tensor if needed
-    if not isinstance(x, tp.Tensor):
-        x = tp.tensor(x, dtype=tp.float64)
+    x = tp.tensor(x, dtype=tp.float)
         
     # Now tp.diff will work regardless of the original input type
     diffs = tp.diff(x, axis=0)
