@@ -33,7 +33,7 @@ class GradientDescent(DescentMethod):
         d = -grad                   
         alpha = backtracking_line_search(self.f, grad_func, self.x, d, self.alpha)
         self.x = self.x - alpha * grad
-        return self.x, alpha, grad
+        return self.x , alpha, grad
     
 
     def opt(self,iter=100):
@@ -49,10 +49,11 @@ class GradientDescent(DescentMethod):
             f_values.append(objective_function(self.x,self.n, self.start , self.goal ,self.D,self.obj,self.lam,self.mu))
             x_poins.append(self.x.copy())
             x_old = self.x.copy()
-            step_x, alphaz ,grad = self.step()
-            print(grad)
-            print(self.x)
-            print(alphaz, "This is a alpha")
+            step_x, alphaz, grad = self.step()
+            #print(grad,"GD gradient")
+            print(np.linalg.norm(grad),"GD norm gradient")
+            #print(self.x)
+            #print(alphaz, "This is a alpha")
             alphz.append(alphaz)
             stepz.append(step_x)
             f_new = objective_function(self.x,self.n, self.start , self.goal ,self.D,self.obj,self.lam,self.mu)
@@ -61,7 +62,7 @@ class GradientDescent(DescentMethod):
                 print(f"f_old: {f_old}, f_new: {f_new}, diff: {f_old - f_new}")
                 break
             k +=1 
-            print(alphz)
+            #print(alphz)
         return self.x, x_poins, f_values,alphz, stepz
 
 
