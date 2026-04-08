@@ -30,7 +30,7 @@ def f_O(x:an.array, obj):
          i += 1 
    return penalty
 
-def f_O_2(x: an.array,obj,alpha=2.0):
+def f_O_2(x: an.array,obj,alpha=1.0):
    """ Obstacle model. The second penalty"""
    N = len(x)
    penalty = 0 

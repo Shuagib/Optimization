@@ -33,31 +33,36 @@ class GradientDescent(DescentMethod):
         d = -grad                   
         alpha = backtracking_line_search(self.f, grad_func, self.x, d, self.alpha)
         self.x = self.x - alpha * grad
-        return self.x, alpha
+        return self.x, alpha, grad
     
 
     def opt(self,iter=100):
         """ Gradient descent for using Conjugate method to find optimial design point"""
         x_poins = []
         f_values = []
+        stepz = []
         k = 0
-        ep = 0.00000000000000000001
+        ep = 0.0001
         alphz = []
 
         while k < iter: 
             f_values.append(objective_function(self.x,self.n, self.start , self.goal ,self.D,self.obj,self.lam,self.mu))
             x_poins.append(self.x.copy())
             x_old = self.x.copy()
-            self.x, self.alpha = self.step()
-            alphz.append(self.alpha)
+            step_x, alphaz ,grad = self.step()
+            print(grad)
+            print(self.x)
+            print(alphaz, "This is a alpha")
+            alphz.append(alphaz)
+            stepz.append(step_x)
             f_new = objective_function(self.x,self.n, self.start , self.goal ,self.D,self.obj,self.lam,self.mu)
             f_old = objective_function(x_old,self.n, self.start , self.goal ,self.D,self.obj,self.lam,self.mu)
             if f_old - f_new < ep * abs(f_old):
                 print(f"f_old: {f_old}, f_new: {f_new}, diff: {f_old - f_new}")
-                #break
+                break
             k +=1 
             print(alphz)
-        return self.x, x_poins, f_values,alphz
+        return self.x, x_poins, f_values,alphz, stepz
 
 
 
