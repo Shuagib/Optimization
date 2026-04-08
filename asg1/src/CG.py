@@ -21,7 +21,7 @@ class Conjugate_Gradient(DescentMethod):
         self.D = D
         self.n = n
         self.f =  lambda x: objective_function(x,self.n, self.start , self.goal ,self.D,self.obj,self.lam,self.mu)
-        self.d = -gradient_objective(self.x, self.n, self.start, self.goal, self.D, self.obj, self.lam, self.mu)
+        self.d = -gradient_objective(self.x, self.n, self.start, self.goal, self.D, self.obj, self.lam, self.mu) #Starting descent direction
         self.gradient = gradient_objective(self.x, self.n, self.start, self.goal, self.D, self.obj, self.lam, self.mu)
         if lam  < 0 or mu < 0:
             raise ValueError("Error: Must be strictly bigger than 0")
@@ -34,12 +34,12 @@ class Conjugate_Gradient(DescentMethod):
         grad = gradient_objective(self.x, self.n, self.start, self.goal, self.D, self.obj, self.lam, self.mu) #NewGradient
         beta_PR =  np.dot(np.transpose(grad), (grad - self.gradient)) / np.dot(np.transpose(self.gradient), self.gradient) 
         beta_FR = max(beta_PR,0)
-        self.d = - grad  + beta_FR * self.d
+        old_d = self.d
+        self.d = - grad  + beta_FR * old_d #Descent direction
         alpha_z, alpha_tried, alpha_rejected = strong_backtracking(func,grad_func,self.x, self.d,self.alpha) #Using Stron_backtracking as line searc
         updat_x = self.x + alpha_z * self.d
         self.gradient = grad #Old gradient
         self.x = updat_x
-       
          #Updating rule  for next position x 
          #Polak-Ribière Method for keeping track of the difference between our Gradient directions
          #New descnt direction given our negative gradient, difference  (Beta) and old descent direction
@@ -51,7 +51,7 @@ class Conjugate_Gradient(DescentMethod):
         x_points = []
         func_values = []
         k = 0
-        ep = 0.01
+        ep = 100
         alpha_list = []
         while k < kmax: #Determination method if the new postion and old postion has very little divergence then step
             func_values.append(objective_function(self.x,self.n, self.start , self.goal ,self.D,self.obj,self.lam,self.mu)) #Function value
@@ -67,7 +67,7 @@ class Conjugate_Gradient(DescentMethod):
             #print(f'The points we have benn: {x_points}')
 
             if np.linalg.norm(grad) < ep: #Termination Condition
-                #print(f'The Gradient is: {grad} and is absolute value is { np.linalg.norm(grad)}, Has convedged yet: {np.linalg.norm(grad) < ep} away from converging')
+                print(f'The Gradient is: {grad} and is absolute value is {np.linalg.norm(grad)}, and stopped at: {self.x[k]} away from converging')
                 break 
             k +=1
             print(f"The iteration is: {k}") 

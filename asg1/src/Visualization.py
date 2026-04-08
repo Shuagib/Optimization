@@ -15,13 +15,13 @@ start_point_x, start_point_y = start_point
 end_point_x, end_point_y = end_point
 
 #Amount of Points 
-N = 50
+N_amount = 100
 
 
 
 #Creaing x and y axis
-x_axis = np.linspace(start_point_x, end_point_x, N)
-y_axis = np.linspace(start_point_y, end_point_y, N)
+x_axis = np.linspace(start_point_x, end_point_x, N_amount)
+y_axis = np.linspace(start_point_y, end_point_y, N_amount)
 
 # Creating path as an (n,2) Array
 
@@ -48,7 +48,7 @@ Ob2 = plt.Circle(( 6.0 , 7.0), 1,color="darkorange", zorder= 2)
 
 l = 3 #Smoothness
 m = 30 #Penalty
-D_matrix = build_D(N)
+D_matrix = build_D(N_amount)
 alpha0 = 0.5
 
 x_start = np.array([start_point_x, start_point_y])
@@ -58,7 +58,7 @@ initial_path = np.column_stack((x_axis, y_axis))
 trajectory_path = flatten(initial_path)
 ob_main = [((16.0, 19.0), 3), ((6.0, 7.0), 3)]
 
-x_point, travel_x, f_value, alphz, stepz = GradientDescent(trajectory_path, alpha0, l, m, ob_main, N, D_matrix, x_start, x_goal).opt(N)
+x_point, travel_x, f_value, alphz, stepz = GradientDescent(trajectory_path, alpha0, l, m, ob_main, N_amount, D_matrix, x_start, x_goal).opt(N_amount)
 
 
 #print(len(travel_x),"The rigt Amount is:")
@@ -68,7 +68,7 @@ x_point, travel_x, f_value, alphz, stepz = GradientDescent(trajectory_path, alph
 fig, axes = plt.subplots(1, 3, figsize=(12, 5))
 
 for run in range(len(travel_x)):
-    last_run = unflatten(travel_x[-1], N, x_start, x_goal)
+    last_run = unflatten(travel_x[-1], N_amount, x_start, x_goal)
     xes = last_run[:,0]
     yis = last_run[:,1]
     axes[0].plot(xes, yis,color="orange",marker='o')
@@ -84,7 +84,7 @@ axes[0].legend()
 axes[0].set_title('Path Evolution Gradient Descent')
 
 # Right plot - Convergence
-axes[1].plot(x_axis,f_value)
+axes[1].plot(f_value)
 axes[1].set_xlabel('Iteration')
 axes[1].set_ylabel('f(x)')
 axes[1].set_title('Convergence Gradient Descent')
@@ -100,7 +100,7 @@ axes[2].set_xlabel('Optimizers iteterations')
 
 
 #Intilizaing CG
-updat_x, alpha_list,x_points,func_values,alpha_tried, alpha_rejected  = Conjugate_Gradient(trajectory_path, alpha0, l, m, ob_main, N, D_matrix, x_start, x_goal).opt(N)
+updat_x, alpha_list,x_points,func_values,alpha_tried, alpha_rejected  = Conjugate_Gradient(trajectory_path, alpha0, l, m, ob_main, N_amount, D_matrix, x_start, x_goal).opt(N_amount)
 
 
 print(len(x_points), "This is the lenght")
