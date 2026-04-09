@@ -55,11 +55,11 @@ class Conjugate_Gradient(DescentMethod):
         alpha_list = []
         while k < kmax: #Determination method if the new postion and old postion has very little divergence then step
             func_values.append(objective_function(self.x,self.n, self.start , self.goal ,self.D,self.obj,self.lam,self.mu)) #Function value
-            x_points.append(self.x.copy()) #current Positions append in a list 
+            x_points.append(self.x[:]) #current Positions append in a list 
             updat_x, alpha_z,grad, alpha_tried, alpha_rejected = self.step()
             #print(f"The current next step is: {updat_x}")
             alpha_list.append(alpha_z)
-            #print(f"The current Alphaz list is: {alpha_list}")
+            #print(f"The current Alphaz list is: {alpha_list}")c
             #print(f'The gradient is: {grad}')
             print(np.linalg.norm(grad),"CG norm gradient")
             #print(f"alpha that has been searched:  {alpha_tried}")

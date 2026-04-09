@@ -15,7 +15,7 @@ start_point_x, start_point_y = start_point
 end_point_x, end_point_y = end_point
 
 #Amount of Points 
-N_amount = 100
+N_amount = 20
 
 
 
@@ -95,24 +95,48 @@ axes[2].plot(alphz)
 axes[2].set_title('Step sizes (alpha)')
 axes[2].set_xlabel('Optimizers iteterations')
 
-#plt.tight_layout()
-#plt.show()
+plt.tight_layout()
+plt.show()
 
 
 #Intilizaing CG
+
+
+#print(len(x_points), "This is the lenght")
+#print(len(func_values), "This is the the amount of function evaluations")
+#print(len(alpha_list), "This is the amount of alphas")
+
+
+####Plotting Conjugate Gradient 
+
+
 updat_x, alpha_list,x_points,func_values,alpha_tried, alpha_rejected  = Conjugate_Gradient(trajectory_path, alpha0, l, m, ob_main, N_amount, D_matrix, x_start, x_goal).opt(N_amount)
 
+def plotting_CG_Path(iteration_path,function_evulations,alphalist,alpha_tried,alpha_rejected):
+    _, axes_C = plt.subplots(1, 4, figsize=(12, 5))
+    for run in range(len(iteration_path)):
+        last_run = unflatten(iteration_path[-1], N_amount, x_start, x_goal)
+        xes = last_run[:,0]
+        yis = last_run[:,1]
+        axes_C[0].plot(xes, yis,color="orange",marker='o')
+    axes_C[0].add_patch(plt.Circle((16.0, 19.0), 3, color='darkorange', alpha=0.5))
+    axes_C[0].add_patch(plt.Circl(6.0,7.0),3, color = 'darkorange',alpha = 0.5)
+    axes_C[0].plot(start_point_x, start_point_y, 's', color='black', markersize=5, label='start')
+    axes_C[0].plot(end_point_x, end_point_y, 's', color='black', markersize=5, label='goal')
+    axes_C[0].set_title('Path Evolution Conjugate gradient')
 
-print(len(x_points), "This is the lenght")
-print(len(func_values), "This is the the amount of function evaluations")
-print(len(alpha_list), "This is the amount of alphas")
-#Plotting Conjugate Gradient 
+    axes[1].plot(function_evulations)
+    axes[1].set_xlabel('Iteration')
+    axes[1].set_ylabel('f(x)')
+    axes[1].set_title('Convergence Gradient Descent')
 
-fig_C, axes_C = plt.subplots(1, 3, figsize=(12, 5))
+    axes[1].grid()
+    axes[2].plot(alphalist)
+    axes[2].set_title('Step sizes (alpha)')
+    axes[2].set_xlabel('Optimizers iteterations')
 
 
-
-
+plotting_CG_Path_Evolutions(x_points)
 
 
 

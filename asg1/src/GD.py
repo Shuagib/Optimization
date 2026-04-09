@@ -47,7 +47,8 @@ class GradientDescent(DescentMethod):
 
         while k < iter: 
             f_values.append(objective_function(self.x,self.n, self.start , self.goal ,self.D,self.obj,self.lam,self.mu))
-            x_poins.append(self.x[:]) #Creating a new list 
+            x_poins.append(self.x[:]) #Creating a new list
+            x_old = self.x[:]
             step_x, alphaz, grad = self.step()
             #print(grad,"GD gradient")
             print(np.linalg.norm(grad),"GD norm gradient")
@@ -55,7 +56,6 @@ class GradientDescent(DescentMethod):
             #print(alphaz, "This is a alpha")
             alphz.append(alphaz)
             stepz.append(step_x)
-            x_old = self.x[:]
             f_new = objective_function(self.x,self.n, self.start , self.goal ,self.D,self.obj,self.lam,self.mu)
             f_old = objective_function(x_old,self.n, self.start , self.goal ,self.D,self.obj,self.lam,self.mu)
             if f_old - f_new < ep * abs(f_old):
