@@ -23,29 +23,7 @@ N_amount = 20
 x_axis = np.linspace(start_point_x, end_point_x, N_amount)
 y_axis = np.linspace(start_point_y, end_point_y, N_amount)
 
-# Creating path as an (n,2) Array
-
-
-#print(path)
-#Creating Circular Obstacles (More Ecliples then circles)
-Ob1 = plt.Circle(( 16.0 , 19.0), 1,color="darkorange",zorder=2)
-Ob2 = plt.Circle(( 6.0 , 7.0), 1,color="darkorange", zorder= 2)
-
-
-#Plotting the Initial path, start and end points and Obstacles
-#fig, ax = plt.subplots()
-#ax.plot(path,'o',color="orange")
-#ax.set_title("Initial Path and Obstacles")
-#ax.add_patch(Ob1)
-#ax.add_patch(Ob2)
-#ax.plot(start_point_x,start_point_y,'s', color='black')
-#ax.plot(end_point_x,end_point_y,'s', color='black')
-#plt.show()
-
 ### Let's visualize it 
-
-
-
 l = 3 #Smoothness
 m = 30 #Penalty
 D_matrix = build_D(N_amount)
@@ -58,48 +36,52 @@ initial_path = np.column_stack((x_axis, y_axis))
 trajectory_path = flatten(initial_path)
 ob_main = [((16.0, 19.0), 3), ((6.0, 7.0), 3)]
 
-x_point, travel_x, f_value, alphz, stepz = GradientDescent(trajectory_path, alpha0, l, m, ob_main, N_amount, D_matrix, x_start, x_goal).opt(N_amount)
-
 
 #print(len(travel_x),"The rigt Amount is:")
 #print(f_value, "The right amount is " ) 
 #print(len(alphz), "")
 
-fig, axes = plt.subplots(1, 3, figsize=(12, 5))
 
-for run in range(len(travel_x)):
-    last_run = unflatten(travel_x[-1], N_amount, x_start, x_goal)
-    xes = last_run[:,0]
-    yis = last_run[:,1]
-    axes[0].plot(xes, yis,color="orange",marker='o')
+def plotting_Gradient_Descent(x_points,f_value,alphz,stepz):
+    fig, axes = plt.subplots(1, 3, figsize=(10, 5))
+
+    for run in range(len(x_points)):
+        last_run = unflatten(x_points[-1], N_amount, x_start, x_goal)
+        xes = last_run[:,0]
+        yis = last_run[:,1]
+        axes[0].plot(xes, yis,color="orange",marker='o')
 
 #Maybe plot each plots for each iteration to show how it converges better
 #Plotting the first graph with 
-axes[0].add_patch(plt.Circle((16.0, 19.0), 3, color='darkorange', alpha=0.5))
-axes[0].add_patch(plt.Circle((6.0, 7.0), 3, color='darkorange', alpha=0.5))
-axes[0].plot(start_point_x, start_point_y, 's', color='black', markersize=10, label='start')
-axes[0].plot(end_point_x, end_point_y, 's', color='black', markersize=10, label='goal')
-axes[0].set_aspect('equal')
-axes[0].legend()
-axes[0].set_title('Path Evolution Gradient Descent')
+    axes[0].add_patch(plt.Circle((16.0, 19.0), 3, color='darkorange', alpha=0.5))
+    axes[0].add_patch(plt.Circle((6.0, 7.0), 3, color='darkorange', alpha=0.5))
+    axes[0].plot(start_point_x, start_point_y, 's', color='black', markersize=10, label='start')
+    axes[0].plot(end_point_x, end_point_y, 's', color='black', markersize=10, label='goal')
+    axes[0].set_aspect('equal')
+    axes[0].legend()
+    axes[0].set_title('Path Evolution Gradient Descent')
 
-# Right plot - Convergence
-axes[1].plot(f_value)
-axes[1].set_xlabel('Iteration')
-axes[1].set_ylabel('f(x)')
-axes[1].set_title('Convergence Gradient Descent')
-axes[1].grid()
+    # Right plot - Convergence
+    axes[1].plot(f_value)
+    axes[1].set_xlabel('Iteration')
+    axes[1].set_ylabel('f(x)')
+    axes[1].set_title('function values Gradient Descent')
+    axes[1].grid()
 
-#Plotting the Alpha's to show that they varies, Why does my alpha intialstart do 
-axes[2].plot(alphz)
-axes[2].set_title('Step sizes (alpha)')
-axes[2].set_xlabel('Optimizers iteterations')
+    #Plotting the Alpha's to show that they varies, Why does my alpha intialstart do 
+    axes[2].plot(alphz)
+    axes[2].set_title('Brackting line search alpha')
+    axes[2].set_xlabel('Optimizers iteterations')
+    plt.tight_layout()
+    plt.show()
 
-plt.tight_layout()
-plt.show()
+x_point, travel_x, fvalue, alphz, stepz = GradientDescent(trajectory_path, alpha0, l, m, ob_main, N_amount, D_matrix, x_start, x_goal).opt(N_amount)
 
 
-#Intilizaing CG
+#plotting_Gradient_Descent(travel_x,fvalue,alphz,stepz)
+
+
+
 
 
 #print(len(x_points), "This is the lenght")
@@ -110,33 +92,47 @@ plt.show()
 ####Plotting Conjugate Gradient 
 
 
-updat_x, alpha_list,x_points,func_values,alpha_tried, alpha_rejected  = Conjugate_Gradient(trajectory_path, alpha0, l, m, ob_main, N_amount, D_matrix, x_start, x_goal).opt(N_amount)
 
 def plotting_CG_Path(iteration_path,function_evulations,alphalist,alpha_tried,alpha_rejected):
-    _, axes_C = plt.subplots(1, 4, figsize=(12, 5))
+    _, axes_C = plt.subplots(1, 4, figsize=(10, 5))
     for run in range(len(iteration_path)):
         last_run = unflatten(iteration_path[-1], N_amount, x_start, x_goal)
         xes = last_run[:,0]
         yis = last_run[:,1]
         axes_C[0].plot(xes, yis,color="orange",marker='o')
     axes_C[0].add_patch(plt.Circle((16.0, 19.0), 3, color='darkorange', alpha=0.5))
-    axes_C[0].add_patch(plt.Circl(6.0,7.0),3, color = 'darkorange',alpha = 0.5)
+    axes_C[0].add_patch(plt.Circle((6.0, 7.0), 3, color='darkorange', alpha=0.5))
     axes_C[0].plot(start_point_x, start_point_y, 's', color='black', markersize=5, label='start')
     axes_C[0].plot(end_point_x, end_point_y, 's', color='black', markersize=5, label='goal')
-    axes_C[0].set_title('Path Evolution Conjugate gradient')
+    axes_C[0].set_title('Path Evolution Conjugate Gradient')
 
-    axes[1].plot(function_evulations)
-    axes[1].set_xlabel('Iteration')
-    axes[1].set_ylabel('f(x)')
-    axes[1].set_title('Convergence Gradient Descent')
+    axes_C[1].plot(function_evulations)
+    axes_C[1].set_xlabel('Iteration')
+    axes_C[1].set_ylabel('f(x)')
+    axes_C[1].set_title('Function values Conjugate Gradient')
+    axes_C[1].grid()
 
-    axes[1].grid()
-    axes[2].plot(alphalist)
-    axes[2].set_title('Step sizes (alpha)')
-    axes[2].set_xlabel('Optimizers iteterations')
+    axes_C[2].plot(alphalist)
+    axes_C[2].set_title('Good Alpha')
+    axes_C[2].set_xlabel('Optimizers iteterations')
+
+    axes_C[3].plot(alpha_tried)
+    axes_C[3].set_title('Tried Alpha')
+    axes_C[3].set_xlabel('Optimizers iteterations')
+
+    # axes_C[4].plot(alpha_rejected)
+    # axes_C[4].set_title('Rejected Alpha')
+    # axes_C[4].set_xlabel('Optimizers iteterations')
+    plt.tight_layout()
+    plt.show()
+
+    
+
+#Intializing Conjugate Gradient
+updat_x, alpha_list,x_points,func_values,alpha_tried, alpha_rejected  = Conjugate_Gradient(trajectory_path, alpha0, l, m, ob_main, N_amount, D_matrix, x_start, x_goal).opt(N_amount)
 
 
-plotting_CG_Path_Evolutions(x_points)
+#plotting_CG_Path(x_points,func_values,alpha_list,alpha_tried,alpha_rejected)
 
 
 
