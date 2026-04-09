@@ -1,18 +1,18 @@
 
 from autograd import grad
-import autograd.numpy as an
+import autograd.numpy as np
 import numpy as npf
 import math as ma 
-import numpy as np
 
 
-def detector(x:an.array, obj):
+
+def detector(x:np.array, obj):
    """ Measures distance between a point and the center of a obstacle """
    c = obj[0] #Getting the coordinates 
-   return an.linalg.norm(x - c)
+   return np.linalg.norm(x - c)
 
 
-def f_O(x:an.array, obj):
+def f_O(x:np.array, obj):
    """ Obstacle Model that add penality large penality if we are close the obstacles and small if we are far away.
          Returns a penality score """
    N = len(x) # The lenght of the matrix
@@ -26,11 +26,11 @@ def f_O(x:an.array, obj):
             dis_diff_pow = (dis-r)**2  #add square it
             penalty += 1/dis_diff_pow #Add small penalty since it since we are far awy
          else:
-            penalty += 1000*x**2 #Reaches the obstacle need large penality and it gives a simple penalty that is easy to correct
+            penalty += np.inf #Reaches the obstacle need large penality and it gives a simple penalty that is easy to correct
          i += 1 
    return penalty
 
-def f_O_2(x: an.array,obj,alpha=0.01):
+def f_O_2(x: np.array,obj,alpha=0.01):
    """ Obstacle model. The second penalty"""
    N = len(x)
    penalty = 0 
@@ -40,7 +40,7 @@ def f_O_2(x: an.array,obj,alpha=0.01):
       j = 0
       while j < N:
          dis = detector(x[j],y)
-         penalty += an.exp(-a *(dis**2 - r**2))
+         penalty += np.exp(-a *(dis**2 - r**2))
          j+=1 
    return penalty
 
@@ -53,3 +53,7 @@ def gradient_f_O_1(x, obj):
 
 def gradient_f_O_2(x, obj, alpha=0.01):
     return grad_f_O_2(x, obj, alpha)
+
+number = np.inf
+
+print(number)

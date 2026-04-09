@@ -12,7 +12,7 @@ alpha_0 = 0.5
 def objective_function(x_flat, n, x_start, x_goal, D, obj, lam, mu):
     x = sm.unflatten(x_flat, n, x_start, x_goal)
     al = 0.5
-    ob_func = fl.func_L(x) + lam * np.sum(sm.smoothness_residuals(x_flat, n, x_start, x_goal, D)**2) + mu * fo.f_O_2(x, obj,al)
+    ob_func = fl.func_L(x) + lam * np.sum(sm.smoothness_residuals(x_flat, n, x_start, x_goal, D)**2) + mu * fo.f_O(x,obj)
     return ob_func
 
 

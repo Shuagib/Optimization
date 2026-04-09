@@ -23,8 +23,8 @@ x_axis = np.linspace(start_point_x, end_point_x, N_amount)
 y_axis = np.linspace(start_point_y, end_point_y, N_amount)
 
 ### Let's visualize it 
-l = 10 #Smoothness
-m = 10 #Penalty
+l = 0.1 #Smoothness
+m = 5 #Penalty
 D_matrix = build_D(N_amount)
 alpha0 = 0.5
 
