@@ -1,6 +1,6 @@
 from autograd import grad
 import autograd.numpy as an
-
+import numpy as np 
 
 def func_L(x):
     """ This function is the Lp norm 2 and takes the difference  squared and sums 
@@ -17,3 +17,5 @@ grad_func_L = grad(func_L)
 
 def gradientf_L(x):
     return grad_func_L(x) 
+
+

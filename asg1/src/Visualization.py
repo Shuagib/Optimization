@@ -24,8 +24,8 @@ x_axis = np.linspace(start_point_x, end_point_x, N_amount)
 y_axis = np.linspace(start_point_y, end_point_y, N_amount)
 
 ### Let's visualize it 
-l = 3 #Smoothness
-m = 30 #Penalty
+l = 10 #Smoothness
+m = 10 #Penalty
 D_matrix = build_D(N_amount)
 alpha0 = 0.5
 
@@ -77,8 +77,7 @@ def plotting_Gradient_Descent(x_points,f_value,alphz,stepz):
 
 x_point, travel_x, fvalue, alphz, stepz = GradientDescent(trajectory_path, alpha0, l, m, ob_main, N_amount, D_matrix, x_start, x_goal).opt(N_amount)
 
-
-#plotting_Gradient_Descent(travel_x,fvalue,alphz,stepz)
+plotting_Gradient_Descent(travel_x,fvalue,alphz,stepz)
 
 
 
@@ -94,7 +93,7 @@ x_point, travel_x, fvalue, alphz, stepz = GradientDescent(trajectory_path, alpha
 
 
 def plotting_CG_Path(iteration_path,function_evulations,alphalist,alpha_tried,alpha_rejected):
-    _, axes_C = plt.subplots(1, 4, figsize=(10, 5))
+    _, axes_C = plt.subplots(1, 4, figsize=(15, 5))
     for run in range(len(iteration_path)):
         last_run = unflatten(iteration_path[-1], N_amount, x_start, x_goal)
         xes = last_run[:,0]
@@ -129,7 +128,7 @@ def plotting_CG_Path(iteration_path,function_evulations,alphalist,alpha_tried,al
     
 
 #Intializing Conjugate Gradient
-updat_x, alpha_list,x_points,func_values,alpha_tried, alpha_rejected  = Conjugate_Gradient(trajectory_path, alpha0, l, m, ob_main, N_amount, D_matrix, x_start, x_goal).opt(N_amount)
+#updat_x, alpha_list,x_points,func_values,alpha_tried, alpha_rejected  = Conjugate_Gradient(trajectory_path, alpha0, l, m, ob_main, N_amount, D_matrix, x_start, x_goal).opt(N_amount)
 
 
 #plotting_CG_Path(x_points,func_values,alpha_list,alpha_tried,alpha_rejected)
@@ -316,3 +315,6 @@ The iteration is: 50
 50 This is the lenght
 50 This is the the amount of function evaluations
 50 This is the amount of alphas """
+
+
+""" Conjugate Gradient need a low penalty ( can come close without hitting obstacles), but need high penalty for smoothness. Why is that"""

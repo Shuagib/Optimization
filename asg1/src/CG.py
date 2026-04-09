@@ -51,7 +51,7 @@ class Conjugate_Gradient(DescentMethod):
         x_points = []
         func_values = []
         k = 0
-        ep = 100
+        ep = 0.01
         alpha_list = []
         while k < kmax: #Determination method if the new postion and old postion has very little divergence then step
             func_values.append(objective_function(self.x,self.n, self.start , self.goal ,self.D,self.obj,self.lam,self.mu)) #Function value
