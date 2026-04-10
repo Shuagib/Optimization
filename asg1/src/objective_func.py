@@ -16,7 +16,7 @@ def objective_function(x_flat, n, x_start, x_goal, D, obj, lam, mu):
     smoothness = np.sum(sm.smoothness_residuals(x_flat, n, x_start, x_goal, D)**2)
     penalty = fo.f_O_2(x,obj,al)
     ob_func = path + lam * smoothness + mu * penalty
-    return ob_func,path,penalty
+    return ob_func,path,penalty,smoothness
 
 
 # def gradient_objective(x_flat, n, x_start, x_goal, D, obj, lam, mu):

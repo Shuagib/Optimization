@@ -47,10 +47,13 @@ class GradientDescent(DescentMethod):
         gradlist = []
         penlist = []
         pathlist = []
+        smothlist = []
 
 
         while k < iter:
-            fx, lenpath, penalty = objective_function(self.x,self.n, self.start , self.goal ,self.D,self.obj,self.lam,self.mu)
+            fx, lenpath, penalty,smooth = objective_function(self.x,self.n, self.start , self.goal ,self.D,self.obj,self.lam,self.mu)
+            print(f"Smoothness{smooth}")
+            smothlist.append(smooth)
             f_values.append(fx)
             penlist.append(penalty)
             print(penlist,'This is The Penalty list')
@@ -74,7 +77,7 @@ class GradientDescent(DescentMethod):
                 break
             k +=1 
             #print(alphz)
-        return x_poins, self.x, f_values,alphz, stepz,gradlist,pathlist,penlist
+        return [x_poins, self.x, f_values,alphz, stepz,gradlist,pathlist,penlist,smothlist]
 
 
 

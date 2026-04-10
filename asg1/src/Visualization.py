@@ -5,6 +5,7 @@ from F_L import *
 from F_O import *
 from GD import *
 from CG import * 
+from quasi import *
 #Choose start and Goal
 start_point  = (0.5,0.0)
 end_point = (19.0,22.0)
@@ -24,9 +25,9 @@ y_axis = np.linspace(start_point_y, end_point_y, N_amount)
 
 ### Let's visualize it 
 l = 0.1 #Smoothness
-m = 2 #Penalty
+m = 0.5 #Penalty
 D_matrix = build_D(N_amount)
-alpha0 = 0.001
+alpha0 = 0.5
 
 x_start = np.array([start_point_x, start_point_y])
 x_goal = np.array([end_point_x, end_point_y])
@@ -41,7 +42,7 @@ ob_main = [((16.0, 19.0), 3), ((6.0, 7.0), 3)]
 #print(len(alphz), "")
 
 
-def plotting_Gradient_Descent(path_evolution,optimal_path,gradientz,func_v,alphz,path,penalty):
+def plotting_Gradient_Descent(path_evolution,optimal_path,gradientz,func_v,alphz):
     #Plotting the Evolutions pr. iteration. Iteration = N_Amount
     fig, axes = plt.subplots(1, 5, figsize=(15, 5))
   
@@ -115,12 +116,6 @@ def plotting_Gradient_Descent(path_evolution,optimal_path,gradientz,func_v,alphz
     plt.tight_layout()
     plt.show()
 
-trav_x, optimal_x, f_values, alphz, stepz, gradlist, pathlist, penlist = GradientDescent(trajectory_path, alpha0, l, m, ob_main, N_amount, D_matrix, x_start, x_goal).opt(N_amount)
-
-plotting_Gradient_Descent(trav_x,optimal_x,gradlist,f_values,alphz,pathlist,penlist)
-
-#print((stepz), "These are the steps, how do i plot them and show how the function converge each step")
-
 
 
 #print(len(x_points), "This is the lenght")
@@ -132,7 +127,7 @@ plotting_Gradient_Descent(trav_x,optimal_x,gradlist,f_values,alphz,pathlist,penl
 
 
 
-def plotting_CG_Path(optimal_path,path_ev,func_v,gradlist,alpha_z,alpha_rejected, alpha_tried_alpha ):
+def plotting_CG_Path(optimal_path,path_ev,func_v,gradlist,alpha_z,alpha_rejected, alpha_tried_alpha):
     _, axes = plt.subplots(1, 5, figsize=(15, 5))
     for run in range(len(path_ev)):
         last_run = unflatten(path_ev[0], N_amount, x_start, x_goal)
@@ -196,12 +191,74 @@ def plotting_CG_Path(optimal_path,path_ev,func_v,gradlist,alpha_z,alpha_rejected
 
     
 
-#Intializing Conjugate Gradient
-
-#traved_x,optim_x,funcval,grad_lis,step_lis,alpha_lis,rejected, tried_alpha  = Conjugate_Gradient(trajectory_path, alpha0, l, m, ob_main, N_amount, D_matrix, x_start, x_goal).opt(N_amount)
 
 
-#plotting_CG_Path(optim_x,traved_x,funcval,grad_lis,alpha_lis,rejected,tried_alpha)
+# Creating a plot for the penalty function and path functions
+
+def plot_convergence(penal_GD,Path_GD,Penal_CG,path_GC,N,SmGD,SmCg):
+    fig, ax = plt.subplots(1,3,figsize=(15, 5))
+    x_axis = [i for i in range(0,N)]
+    y_CG_path = path_GC
+    y_CG_cost = Penal_CG
+    y_GD_path = Path_GD
+    y_GD_cost= penal_GD
+
+ 
+    #Plooting path function
+    ax[0].plot(x_axis,y_CG_path, color = 'crimson',label='CD',linestyle = ':')
+    ax[0].plot(x_axis,y_GD_path, color = 'royalblue',label='GD',linestyle = ':')
+    ax[0].set_xlabel("Iterations")
+    ax[0].set_ylabel("Path lenght")
+    ax[0].set_title("Path Function: GD vs CG")
+  
+    ax[0].grid()
+
+    #Plotting Penalty cost 
+    ax[1].plot(x_axis,y_CG_cost,color = 'olivedrab',label='GD',linestyle = '--')
+    ax[1].plot(x_axis,y_GD_cost, color = 'orange',label='GD', linestyle = '--')
+    ax[1].set_xlabel('Iterations')
+    ax[1].set_ylabel('Penalty cost')
+    ax[1].set_title('Penalty function (1): GD vs CG')
+
+    ax[2].plot(x_axis,SmGD,color = 'darkorange',label='GD',marker='.',linestyle = 'dashdot')
+    ax[2].plot(x_axis,SmCg, color = 'green',label='GD',marker ='.',linestyle = 'dashdot')
+    ax[2].set_xlabel('Iterations')
+    ax[2].set_ylabel('Smootness of trajectory')
+    ax[2].set_title('Smootness: GD vs CG')
+   
+    
+   
+    
+    plt.tight_layout()
+    plt.show()
+
+
+
+
+
+# #Starting all the plotting
+
+# #Intializing Conjugate Gradient
+
+# trav_path,optimal_path,funcv,grad_list,stepx,alpha_list,rejected_list,alpha_tried_list,pena_list_CG,path_list_CG, SMC = Conjugate_Gradient(trajectory_path, alpha0, l, m, ob_main, N_amount, D_matrix, x_start, x_goal).opt(N_amount)
+
+Quasi_NewtonMethod(trajectory_path,x_start,x_goal,alpha0,l,m,ob_main,D_matrix,N_amount).opt_BFGS(N_amount)
+
+# #plotting_CG_Path(optimal_path,trav_path,funcv,grad_list,alpha_list,rejected_list,alpha_tried_list)
+
+
+# trav_x, optimal_x, f_values, alphz, stepz, gradlist, pathlist_GD, penlist_GD, SMG = GradientDescent(trajectory_path, alpha0, l, m, ob_main, N_amount, D_matrix, x_start, x_goal).opt(N_amount)
+
+# plotting_Gradient_Descent(trav_x,optimal_x,gradlist,f_values,alphz)
+
+# path_GradientDescent = pathlist_GD
+# penalty_GradientDescent = penlist_GD
+# path_ConjugateGradient = path_list_CG
+# Penalty_ConjugateGradient = pena_list_CG
+# smoothnessG = SMG
+# SmootnnessC = SMC   
+
+# plot_convergence(penalty_GradientDescent,path_GradientDescent,Penalty_ConjugateGradient,path_ConjugateGradient,N_amount,SMG,SMC)
 
 
 
@@ -209,10 +266,7 @@ def plotting_CG_Path(optimal_path,path_ev,func_v,gradlist,alpha_z,alpha_rejected
 
 
 
-
-
-
-#Plot penalty cost different penalty functions , and Convergence by the gradient use lin.norm using the 
+# #Plot penalty cost different penalty functions , and Convergence by the gradient use lin.norm using the 
 
 
 

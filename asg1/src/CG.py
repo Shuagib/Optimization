@@ -55,8 +55,17 @@ class Conjugate_Gradient(DescentMethod):
         ep = 0.01
         alpha_list = []
         gradient_list = []
+        penalty_list = []
+        path_list = []
+        smooth_list = []
         while k < kmax: #Determination method if the new postion and old postion has very little divergence then step
-            func_values.append(objective_function(self.x,self.n, self.start , self.goal ,self.D,self.obj,self.lam,self.mu)[0]) #Function value
+            fx, path,pena,smooth =  objective_function(self.x,self.n, self.start , self.goal ,self.D,self.obj,self.lam,self.mu)
+            print(f"Smoothness is {smooth}")
+            smooth_list.append(smooth)
+            func_values.append(fx) #Function value
+            print("Func_values", "f(x)")
+            penalty_list.append(pena)
+            path_list.append(path)
             x_points.append(self.x[:]) #current Positions append in a list 
             updat_x, alpha_z,grad, rejected, tried_alpha = self.step()
             #print(f"The current next step is: {updat_x}")
@@ -67,14 +76,16 @@ class Conjugate_Gradient(DescentMethod):
             print(np.linalg.norm(grad),"CG norm gradient")
             grad_con = np.linalg.norm(grad)
             gradient_list.append(grad_con)
+            print(f' This is the path: {path_list} \n ' + 
+                  f'This is the Penalty: {penalty_list} ')
             #print(f"alpha that has been searched:  {alpha_tried}")
             #print(f"Alphat that been rejected: {alpha_rejected}")
             #print(f'The points we have benn: {x_points}')
-
+            k +=1
             if np.linalg.norm(grad) < ep: #Termination Condition
                 print(f'The Gradient is: {grad} and is absolute value is {np.linalg.norm(grad)}, and stopped at: {self.x[k]} away from converging')
                 break 
-            k +=1
-            print(f"The iteration is: {k}") 
-        return  x_points,updat_x,func_values, gradient_list,stepz,alpha_list,rejected, tried_alpha #Return current position, alphas list, x position, function values
+            
+            #print(f"The iteration is: {k}") 
+        return [x_points,updat_x,func_values, gradient_list,stepz,alpha_list,rejected, tried_alpha,penalty_list,path_list,smooth_list] #Return current position, alphas list, x position, function values
     
