@@ -36,7 +36,7 @@ class Conjugate_Gradient(DescentMethod):
         beta_FR = max(beta_PR,0)
         old_d = self.d
         self.d = - grad  + beta_FR * old_d #Descent direction
-        alpha_z, alpha_tried, alpha_rejected = strong_backtracking(func,grad_func,self.x, self.d,self.alpha) #Using Stron_backtracking as line searc
+        alpha_z,  rejected, tried_alpha = strong_backtracking(func,grad_func,self.x, self.d,self.alpha) #Using Stron_backtracking as line searc
         updat_x = self.x + alpha_z * self.d
         self.gradient = grad #Old gradient
         self.x = updat_x
@@ -44,24 +44,29 @@ class Conjugate_Gradient(DescentMethod):
          #Polak-Ribière Method for keeping track of the difference between our Gradient directions
          #New descnt direction given our negative gradient, difference  (Beta) and old descent direction
                                      #Using Strong_Bracketing Line search search for finding best alpha
-        return self.x, alpha_z,grad,alpha_tried, alpha_rejected
+        return self.x, alpha_z,grad, rejected, tried_alpha
     
     def opt(self, kmax=100):
         """ Optimizer for using Conjugate method to find optimial design point"""
         x_points = []
         func_values = []
+        stepz = []
         k = 0
         ep = 0.01
         alpha_list = []
+        gradient_list = []
         while k < kmax: #Determination method if the new postion and old postion has very little divergence then step
             func_values.append(objective_function(self.x,self.n, self.start , self.goal ,self.D,self.obj,self.lam,self.mu)) #Function value
             x_points.append(self.x[:]) #current Positions append in a list 
-            updat_x, alpha_z,grad, alpha_tried, alpha_rejected = self.step()
+            updat_x, alpha_z,grad, rejected, tried_alpha = self.step()
             #print(f"The current next step is: {updat_x}")
             alpha_list.append(alpha_z)
+            stepz.append(updat_x)
             #print(f"The current Alphaz list is: {alpha_list}")c
             #print(f'The gradient is: {grad}')
             print(np.linalg.norm(grad),"CG norm gradient")
+            grad_con = np.linalg.norm(grad)
+            gradient_list.append(grad_con)
             #print(f"alpha that has been searched:  {alpha_tried}")
             #print(f"Alphat that been rejected: {alpha_rejected}")
             #print(f'The points we have benn: {x_points}')
@@ -71,5 +76,5 @@ class Conjugate_Gradient(DescentMethod):
                 break 
             k +=1
             print(f"The iteration is: {k}") 
-        return  updat_x , alpha_list,x_points,func_values,alpha_tried, alpha_rejected #Return current position, alphas list, x position, function values
+        return  x_points,updat_x,func_values, gradient_list,stepz,alpha_list,rejected, tried_alpha #Return current position, alphas list, x position, function values
     

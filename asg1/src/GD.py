@@ -44,6 +44,7 @@ class GradientDescent(DescentMethod):
         k = 0
         ep = 0.0001
         alphz = []
+        gradlist = []
 
         while k < iter: 
             f_values.append(objective_function(self.x,self.n, self.start , self.goal ,self.D,self.obj,self.lam,self.mu))
@@ -52,6 +53,8 @@ class GradientDescent(DescentMethod):
             step_x, alphaz, grad = self.step()
             #print(grad,"GD gradient")
             print(np.linalg.norm(grad),"GD norm gradient")
+            scalr_grad = np.linalg.norm(grad)
+            gradlist.append(scalr_grad)
             #print(self.x)
             #print(alphaz, "This is a alpha")
             alphz.append(alphaz)
@@ -63,7 +66,7 @@ class GradientDescent(DescentMethod):
                 break
             k +=1 
             #print(alphz)
-        return self.x, x_poins, f_values,alphz, stepz
+        return x_poins, self.x, f_values,alphz, stepz,gradlist
 
 
 
