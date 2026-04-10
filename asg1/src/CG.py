@@ -20,7 +20,7 @@ class Conjugate_Gradient(DescentMethod):
         self.obj = obj
         self.D = D
         self.n = n
-        self.f =  lambda x: objective_function(x,self.n, self.start , self.goal ,self.D,self.obj,self.lam,self.mu)
+        self.f =  lambda x: objective_function(x,self.n, self.start , self.goal ,self.D,self.obj,self.lam,self.mu)[0]
         self.d = -gradient_objective(self.x, self.n, self.start, self.goal, self.D, self.obj, self.lam, self.mu) #Starting descent direction
         self.gradient = gradient_objective(self.x, self.n, self.start, self.goal, self.D, self.obj, self.lam, self.mu)
         if lam  < 0 or mu < 0:
@@ -30,7 +30,7 @@ class Conjugate_Gradient(DescentMethod):
     def step(self):
         """Compute the next design point according to:"""
         grad_func = lambda y: gradient_objective(y, self.n, self.start, self.goal, self.D, self.obj, self.lam, self.mu)
-        func = lambda x: objective_function(x,self.n, self.start , self.goal ,self.D,self.obj,self.lam,self.mu)
+        func = lambda x: objective_function(x,self.n, self.start , self.goal ,self.D,self.obj,self.lam,self.mu)[0]
         grad = gradient_objective(self.x, self.n, self.start, self.goal, self.D, self.obj, self.lam, self.mu) #NewGradient
         beta_PR =  np.dot(np.transpose(grad), (grad - self.gradient)) / np.dot(np.transpose(self.gradient), self.gradient) 
         beta_FR = max(beta_PR,0)
@@ -56,7 +56,7 @@ class Conjugate_Gradient(DescentMethod):
         alpha_list = []
         gradient_list = []
         while k < kmax: #Determination method if the new postion and old postion has very little divergence then step
-            func_values.append(objective_function(self.x,self.n, self.start , self.goal ,self.D,self.obj,self.lam,self.mu)) #Function value
+            func_values.append(objective_function(self.x,self.n, self.start , self.goal ,self.D,self.obj,self.lam,self.mu)[0]) #Function value
             x_points.append(self.x[:]) #current Positions append in a list 
             updat_x, alpha_z,grad, rejected, tried_alpha = self.step()
             #print(f"The current next step is: {updat_x}")

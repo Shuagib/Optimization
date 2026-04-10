@@ -41,8 +41,7 @@ ob_main = [((16.0, 19.0), 3), ((6.0, 7.0), 3)]
 #print(len(alphz), "")
 
 
-def plotting_Gradient_Descent(path_evolution,optimal_path,gradientz,func_v,alphz):
-    plt.rcParams.update({'font.size': 12})
+def plotting_Gradient_Descent(path_evolution,optimal_path,gradientz,func_v,alphz,path,penalty):
     #Plotting the Evolutions pr. iteration. Iteration = N_Amount
     fig, axes = plt.subplots(1, 5, figsize=(15, 5))
   
@@ -98,15 +97,27 @@ def plotting_Gradient_Descent(path_evolution,optimal_path,gradientz,func_v,alphz
 
     #Plotting the Alpha's to show that they varies, Why does my alpha intialstart do 
     axes[4].plot(alphz)
-    axes[4].set_title('Brackting line search alpha',fontsize='10')
+    axes[4].set_title('Brackting Line Search Alpha',fontsize='10')
     axes[4].set_xlabel('Alpha search',fontsize='10')
     axes[4].set_ylabel('Alphas',fontsize='10')
+
+    # axes[5].plot(path)
+    # axes[5].set_title('Path Lenght Evolutions',fontsize='10')
+    # axes[5].set_xlabel('Iterations',fontsize='10')
+    # axes[5].set_ylabel('Lenght of Path ',fontsize='10')
+
+    # axes[6].plot(penalty)
+    # axes[6].set_title('Penalty Function',fontsize='10')
+    # axes[6].set_xlabel('Iterations',fontsize='10')
+    # axes[6].set_ylabel('Cost ',fontsize='10')
+
+
     plt.tight_layout()
     plt.show()
 
-optimal_points, path_ev, f_values,alphz, stepz,gradlistz = GradientDescent(trajectory_path, alpha0, l, m, ob_main, N_amount, D_matrix, x_start, x_goal).opt(N_amount)
+trav_x, optimal_x, f_values, alphz, stepz, gradlist, pathlist, penlist = GradientDescent(trajectory_path, alpha0, l, m, ob_main, N_amount, D_matrix, x_start, x_goal).opt(N_amount)
 
-plotting_Gradient_Descent(optimal_points,path_ev,gradlistz,f_values,alphz)
+plotting_Gradient_Descent(trav_x,optimal_x,gradlist,f_values,alphz,pathlist,penlist)
 
 #print((stepz), "These are the steps, how do i plot them and show how the function converge each step")
 
@@ -187,10 +198,10 @@ def plotting_CG_Path(optimal_path,path_ev,func_v,gradlist,alpha_z,alpha_rejected
 
 #Intializing Conjugate Gradient
 
-traved_x,optim_x,funcval,grad_lis,step_lis,alpha_lis,rejected, tried_alpha  = Conjugate_Gradient(trajectory_path, alpha0, l, m, ob_main, N_amount, D_matrix, x_start, x_goal).opt(N_amount)
+#traved_x,optim_x,funcval,grad_lis,step_lis,alpha_lis,rejected, tried_alpha  = Conjugate_Gradient(trajectory_path, alpha0, l, m, ob_main, N_amount, D_matrix, x_start, x_goal).opt(N_amount)
 
 
-plotting_CG_Path(optim_x,traved_x,funcval,grad_lis,alpha_lis,rejected,tried_alpha)
+#plotting_CG_Path(optim_x,traved_x,funcval,grad_lis,alpha_lis,rejected,tried_alpha)
 
 
 

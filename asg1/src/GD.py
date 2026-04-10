@@ -21,7 +21,7 @@ class GradientDescent(DescentMethod):
         self.obj = obj
         self.D = D
         self.gradient = gradient_objective(self.x, self.n, self.start, self.goal, self.D, self.obj, self.lam, self.mu)
-        self.f = lambda x: objective_function(x,self.n, self.start , self.goal ,self.D,self.obj,self.lam,self.mu)
+        self.f = lambda x: objective_function(x,self.n, self.start , self.goal ,self.D,self.obj,self.lam,self.mu)[0]
         if lam  < 0 or mu < 0:
             raise ValueError("Error: Must be strictly bigger than 0")
            
@@ -45,9 +45,17 @@ class GradientDescent(DescentMethod):
         ep = 0.0001
         alphz = []
         gradlist = []
+        penlist = []
+        pathlist = []
 
-        while k < iter: 
-            f_values.append(objective_function(self.x,self.n, self.start , self.goal ,self.D,self.obj,self.lam,self.mu))
+
+        while k < iter:
+            fx, lenpath, penalty = objective_function(self.x,self.n, self.start , self.goal ,self.D,self.obj,self.lam,self.mu)
+            f_values.append(fx)
+            penlist.append(penalty)
+            print(penlist,'This is The Penalty list')
+            pathlist.append(lenpath)
+            print(pathlist,'This is the Path list')
             x_poins.append(self.x[:]) #Creating a new list
             x_old = self.x[:]
             step_x, alphaz, grad = self.step()
@@ -59,14 +67,14 @@ class GradientDescent(DescentMethod):
             #print(alphaz, "This is a alpha")
             alphz.append(alphaz)
             stepz.append(step_x)
-            f_new = objective_function(self.x,self.n, self.start , self.goal ,self.D,self.obj,self.lam,self.mu)
-            f_old = objective_function(x_old,self.n, self.start , self.goal ,self.D,self.obj,self.lam,self.mu)
+            f_new = objective_function(self.x,self.n, self.start , self.goal ,self.D,self.obj,self.lam,self.mu)[0]
+            f_old = objective_function(x_old,self.n, self.start , self.goal ,self.D,self.obj,self.lam,self.mu)[0]
             if f_old - f_new < ep * abs(f_old):
                 print(f"f_old: {f_old}, f_new: {f_new}, diff: {f_old - f_new}")
                 break
             k +=1 
             #print(alphz)
-        return x_poins, self.x, f_values,alphz, stepz,gradlist
+        return x_poins, self.x, f_values,alphz, stepz,gradlist,pathlist,penlist
 
 
 
