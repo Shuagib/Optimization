@@ -6,7 +6,7 @@ from F_L import f_L,gradientf_L
 from F_O import f_O, f_O_2,gradient_f_O_2,gradientf_O
 from smooth import smoothness_residuals, gradient_smoothness, least_squares_func, D, flatten, unflatten
 from Path import path
-from Bt_LineSearch import backtracking_line_search
+from line_search import backtracking_line_search
 from objective_func import *
 
 """ Mapping functions with path"""
@@ -31,7 +31,7 @@ mu = 50.0
 f_simple = lambda x_flat: objective_function(x_flat, N, x_start, x_goal, D, obj, lam, mu)
 
 # 'grad_simple' does the same for the gradient.
-grad_simple = lambda x_flat: gradient_objective(x_flat, N, x_start, x_goal, D, obj, lam, mu)
+grad_simple = lambda x_flat:objective_function(x_flat, N, x_start, x_goal, D, obj, lam, mu)[4]
 
 x_curr = flatten(path)
 d = -grad_simple(x_curr) # Move in the direction of steepest descent

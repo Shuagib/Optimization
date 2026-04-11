@@ -43,3 +43,12 @@ def strong_backtracking(f, nabla, x, d, alpha=1, beta=1e-4, sigma=0.1):
             alpha_lo = alpha
     #print(f"Zoom done: lo={alpha_lo:.6f}  hi={alpha_hi:.6f}")
     return alpha_lo, rejected, tried_alpha
+
+
+
+
+def backtracking_line_search(f, grad, x, d, alpha_0=0.5, p=0.5, beta=1e-4):
+    y, g, alpha = f(x), grad(x), alpha_0    
+    while ( f(x + alpha * d) > y + beta * alpha * np.dot(g, d) ) :
+        alpha *= p
+    return alpha

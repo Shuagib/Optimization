@@ -10,8 +10,8 @@ from smooth import D, smoothness_residuals, gradient_smoothness, least_squares_f
 from objective_func import objective_function, gradient_objective
 from Ekatrs import objective_function, gradient_objective, grad_simple
 import matplotlib.transforms as mtransforms
-from strong_brack import strong_backtracking
-from Bt_LineSearch import backtracking_line_search
+from line_search import strong_backtracking
+from line_search import backtracking_line_search
 from objective_func import objective_function
 from Path import *
 

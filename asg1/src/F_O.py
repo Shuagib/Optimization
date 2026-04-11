@@ -1,7 +1,6 @@
 
 from autograd import grad
 import autograd.numpy as np
-import numpy as npf
 import math as ma 
 
 

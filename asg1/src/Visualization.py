@@ -23,9 +23,9 @@ N_amount = 20
 x_axis = np.linspace(start_point_x, end_point_x, N_amount)
 y_axis = np.linspace(start_point_y, end_point_y, N_amount)
 
-### Let's visualize it 
-l = 0.1 #Smoothness
-m = 0.5 #Penalty
+### Let's visalize it 
+l = 1 #Smoothness
+m =  20 #Penalty
 D_matrix = build_D(N_amount)
 alpha0 = 0.5
 
@@ -34,7 +34,7 @@ x_goal = np.array([end_point_x, end_point_y])
 
 initial_path = np.column_stack((x_axis, y_axis))
 trajectory_path = flatten(initial_path)
-ob_main = [((16.0, 19.0), 3), ((6.0, 7.0), 3)]
+ob_main = [((16.0, 19.0), 3), (( 6.0 , 7.0), 3)]
 
 
 #print(len(travel_x),"The rigt Amount is:")
@@ -42,23 +42,58 @@ ob_main = [((16.0, 19.0), 3), ((6.0, 7.0), 3)]
 #print(len(alphz), "")
 
 
-def plotting_Gradient_Descent(path_evolution,optimal_path,gradientz,func_v,alphz):
-    #Plotting the Evolutions pr. iteration. Iteration = N_Amount
-    fig, axes = plt.subplots(1, 5, figsize=(15, 5))
-  
-    for i in range(len(path_evolution)):
-        last_run = unflatten(path_evolution[0], N_amount, x_start, x_goal)
-        xes = last_run[:,0]
-        yis = last_run[:,1]
-        axes[0].plot(xes, yis,color="orange",marker='o')
 
-    axes[0].add_patch(plt.Circle((16.0, 19.0), 3, color='darkorange', alpha=0.5))
-    axes[0].add_patch(plt.Circle((6.0, 7.0), 3, color='darkorange', alpha=0.5))
-    axes[0].plot(start_point_x, start_point_y, 's', color='black', markersize=10, label='start')
-    axes[0].plot(end_point_x, end_point_y, 's', color='black', markersize=10, label='goal')
-    axes[0].set_aspect('equal', adjustable='box')
-    axes[0].legend()
-    axes[0].set_title('Path Evolution Gradient Descent')
+def plotting_pathevolution(path_evolution):
+    #Plotting the Evolutions pr. iteration. Iteration = N_Amount
+    iteration_pr_plot = [0, 1, 2,3,4,5,6,7,8] # The first 9 plots
+    _, axes = plt.subplots(3, 3, figsize=(15, 5)) #Creating 3 rows and 3 coloums 3x3 = 9 pictures 
+
+
+    for id, i in enumerate(iteration_pr_plot):
+        row = id//3 #Using 3 coloums  each row []. id  = 0, 0//3 = 0 row[0], id = 1, 1//3 = 1
+        col = id % 3  #Using 3 Coloums each col [] 
+        path_evalutions = unflatten(path_evolution[i], N_amount, x_start, x_goal)
+        #Ends with a plot: axes[0,0]  axes[0,1]  axes[0,2]  axes[0,3] axes[1,0]  axes[1,1]  axes[1,2]  axes[1,3] ...
+
+
+        xes = path_evalutions[:,0] #Getting the xis of the vector
+        yis = path_evalutions[:,1] #Getting the yis of the vector
+     
+        axes[row,col].plot(xes, yis,color="orange",marker='o')
+        axes[row,col].set_xlim(0, 25)
+        axes[row,col].set_ylim(0, 25)
+        axes[row,col].add_patch(plt.Circle((16.0, 19.0), 3, color='darkorange', alpha=0.5))
+        axes[row,col].add_patch(plt.Circle(( 6.0 , 7.0), 3, color='darkorange', alpha=0.5))
+        axes[row,col].plot(start_point_x, start_point_y, 's', color='black')
+        axes[row,col].plot(end_point_x, end_point_y, 's', color='black')
+        axes[row,col].set_aspect('equal')
+        axes[row,col].legend()
+     
+    plt.tight_layout()
+    plt.show()
+
+
+  
+
+
+
+def plotting_Gradient_Descent(optimal_path,gradientz,func_v,alphz):
+    #Plotting the Evolutions pr. iteration. Iteration = N_Amount
+    fig, axes = plt.subplots(1, 4, figsize=(15, 5))
+  
+    # for i in range(len(path_evolution)):
+    #     last_run = unflatten(path_evolution[0], N_amount, x_start, x_goal)
+    #     xes = last_run[:,0]
+    #     yis = last_run[:,1]
+    #     axes[0].plot(xes, yis,color="orange",marker='o')
+
+    # axes[0].add_patch(plt.Circle((16.0, 19.0), 3, color='darkorange', alpha=0.5))
+    # axes[0].add_patch(plt.Circle((11.0, 14.0), 3, color='darkorange', alpha=0.5))
+    # axes[0].plot(start_point_x, start_point_y, 's', color='black', markersize=10, label='start')
+    # axes[0].plot(end_point_x, end_point_y, 's', color='black', markersize=10, label='goal')
+    # axes[0].set_aspect('equal', adjustable='box')
+    # axes[0].legend()
+    # axes[0].set_title('Path Evolution Gradient Descent')
   
 
 
@@ -68,50 +103,38 @@ def plotting_Gradient_Descent(path_evolution,optimal_path,gradientz,func_v,alphz
     get_path = unflatten(optimal_path, N_amount, x_start, x_goal)
     xes = get_path[:,0]
     yis = get_path[:,1]
-    axes[1].plot(xes, yis,color="orange",marker='o')
-    axes[1].add_patch(plt.Circle((16.0, 19.0), 3, color='darkorange', alpha=0.5))
-    axes[1].add_patch(plt.Circle((6.0, 7.0), 3, color='darkorange', alpha=0.5))
-    axes[1].plot(start_point_x, start_point_y, 's', color='black', markersize=10, label='start')
-    axes[1].plot(end_point_x, end_point_y, 's', color='black', markersize=10, label='goal')
-    axes[1].set_aspect('equal')
-    axes[1].legend()
-    axes[1].set_title(' Optimal path Gradient Descent')
+    axes[0].plot(xes, yis,color="orange",marker='o')
+    axes[0].add_patch(plt.Circle((16.0, 19.0), 3, color='darkorange', alpha=0.5))
+    axes[0].add_patch(plt.Circle(( 6.0 , 7.0), 3, color='darkorange', alpha=0.5))
+    axes[0].plot(start_point_x, start_point_y, 's', color='black', markersize=10, label='start')
+    axes[0].plot(end_point_x, end_point_y, 's', color='black', markersize=10, label='goal')
+    axes[0].set_aspect('equal')
+    axes[0].legend()
+    axes[0].set_title(' Optimal path Gradient Descent')
 
 
 
     #Convergence of gradient magnitude
-    axes[2].plot(gradientz,color='blue')
-    axes[2].set_xlabel('Points at each gradient',fontsize='10')
-    axes[2].set_ylabel('Iterations',fontsize='10')
-    axes[2].set_title('Magnitude of Change',fontsize='10')
+    axes[1].plot(gradientz,color='blue')
+    axes[1].set_xlabel('Points at each gradient',fontsize='10')
+    axes[1].set_ylabel('Iterations',fontsize='10')
+    axes[1].set_title('Magnitude of Change',fontsize='10')
  
 
 
 
     # Convergence of function evalutions 
-    axes[3].plot(func_v)
-    axes[3].set_title('function values Gradient Descent', fontsize = '10')
-    axes[3].set_xlabel('Iteration',fontsize='10')
-    axes[3].set_ylabel('Evaluations',fontsize='10')
-
-    axes[3].grid()
+    axes[2].plot(func_v)
+    axes[2].set_xlabel('Iteration',fontsize='10')
+    axes[2].set_ylabel('Evaluations',fontsize='10')
+    axes[2].set_title('function values Gradient Descent', fontsize = '10')
+    axes[2].grid()
 
     #Plotting the Alpha's to show that they varies, Why does my alpha intialstart do 
-    axes[4].plot(alphz)
-    axes[4].set_title('Brackting Line Search Alpha',fontsize='10')
-    axes[4].set_xlabel('Alpha search',fontsize='10')
-    axes[4].set_ylabel('Alphas',fontsize='10')
-
-    # axes[5].plot(path)
-    # axes[5].set_title('Path Lenght Evolutions',fontsize='10')
-    # axes[5].set_xlabel('Iterations',fontsize='10')
-    # axes[5].set_ylabel('Lenght of Path ',fontsize='10')
-
-    # axes[6].plot(penalty)
-    # axes[6].set_title('Penalty Function',fontsize='10')
-    # axes[6].set_xlabel('Iterations',fontsize='10')
-    # axes[6].set_ylabel('Cost ',fontsize='10')
-
+    axes[3].plot(alphz)
+    axes[3].set_title('Brackting Line Search Alpha',fontsize='10')
+    axes[3].set_xlabel('Alpha search',fontsize='10')
+    axes[3].set_ylabel('Alphas',fontsize='10')
 
     plt.tight_layout()
     plt.show()
@@ -126,66 +149,50 @@ def plotting_Gradient_Descent(path_evolution,optimal_path,gradientz,func_v,alphz
 ####Plotting Conjugate Gradient 
 
 
-
-def plotting_CG_Path(optimal_path,path_ev,func_v,gradlist,alpha_z,alpha_rejected, alpha_tried_alpha):
-    _, axes = plt.subplots(1, 5, figsize=(15, 5))
-    for run in range(len(path_ev)):
-        last_run = unflatten(path_ev[0], N_amount, x_start, x_goal)
-        xes = last_run[:,0]
-        yis = last_run[:,1]
-        axes[0].plot(xes, yis,color="orange",marker='o')
-    axes[0].add_patch(plt.Circle((16.0, 19.0), 3, color='darkorange', alpha=0.5))
-    axes[0].add_patch(plt.Circle((6.0, 7.0), 3, color='darkorange', alpha=0.5))
-    axes[0].plot(start_point_x, start_point_y, 's', color='black', markersize=5, label='start')
-    axes[0].plot(end_point_x, end_point_y, 's', color='black', markersize=5, label='goal')
-    axes[0].set_title('Path Evolution Conjugate Gradient',fontsize = '10')
-    axes[0].set_aspect('equal')
-    axes[0].legend()
-
-    
-
- 
+def plotting_CG_Path(optimal_path,func_v,gradlist,alpha_z,alpha_rejected, alpha_tried_alpha):
+    _, axes = plt.subplots(1, 4, figsize=(15, 5))
+   
 
     get_path = unflatten(optimal_path, N_amount, x_start, x_goal)
     xes = get_path[:,0]
     yis = get_path[:,1]
-    axes[1].plot(xes, yis,color="orange",marker='o')
-    axes[1].add_patch(plt.Circle((16.0, 19.0), 3, color='darkorange', alpha=0.5))
-    axes[1].add_patch(plt.Circle((6.0, 7.0), 3, color='darkorange', alpha=0.5))
-    axes[1].plot(start_point_x, start_point_y, 's', color='black', markersize=10, label='start')
-    axes[1].plot(end_point_x, end_point_y, 's', color='black', markersize=10, label='goal')
-    axes[1].set_aspect('equal')
-    axes[1].legend()
-    axes[1].set_title('Optimal Path Conjugate Gradient',fontsize = '10')
+    axes[0].plot(xes, yis,color="orange",marker='o')
+    axes[0].add_patch(plt.Circle((16.0, 19.0), 3, color='darkorange', alpha=0.5))
+    axes[0].add_patch(plt.Circle(( 6.0 , 7.0), 3, color='darkorange', alpha=0.5))
+    axes[0].plot(start_point_x, start_point_y, 's', color='black', markersize=10, label='start')
+    axes[0].plot(end_point_x, end_point_y, 's', color='black', markersize=10, label='goal')
+    axes[0].set_aspect('equal')
+    axes[0].legend()
+    axes[0].set_title('Optimal Path Conjugate Gradient',fontsize = '10')
 
 
 
     #Convergence of gradient magnitude
-    axes[2].plot(gradlist,color='blue')
-    axes[2].set_xlabel('Iterations',fontsize='10')
-    axes[2].set_ylabel('Gradient Evaluation',fontsize='10')
-    axes[2].set_title('Magnitude of Change',fontsize='10')
+    axes[1].plot(gradlist,color='blue')
+    axes[1].set_xlabel('Iterations',fontsize='10')
+    axes[1].set_ylabel('Gradient Evaluation',fontsize='10')
+    axes[1].set_title('Magnitude of Change',fontsize='10')
 
  
 
 
 
     # Convergence of function evalutions 
-    axes[3].plot(func_v)
-    axes[3].set_xlabel('Iteration',fontsize='10')
-    axes[3].set_ylabel('Evaluations',fontsize='10')
-    axes[3].set_title('Function values Conjugate Gradient',fontsize='10')
+    axes[2].plot(func_v)
+    axes[2].set_xlabel('Iteration',fontsize='10')
+    axes[2].set_ylabel('Evaluations',fontsize='10')
+    axes[2].set_title('Function values Conjugate Gradient',fontsize='10')
 
  
-    axes[3].grid()
+    axes[2].grid()
 
     #Plotting the Alpha's to show that they varies, Why does my alpha intialstart do 
-    axes[4].plot(alpha_z)
-    axes[4].plot(alpha_rejected)
-    axes[4].plot(alpha_tried_alpha)
-    axes[4].set_title('BLS with Strong wolf conditions ',fontsize='10')
-    axes[4].set_xlabel("Alpha ",fontsize='10')
-    axes[4].set_ylabel("Strong Bracketing Line Search Alpha",fontsize='10')
+    axes[3].plot(alpha_z)
+    axes[3].plot(alpha_rejected)
+    axes[3].plot(alpha_tried_alpha)
+    axes[3].set_title('BLS with Strong wolf conditions ',fontsize='10')
+    axes[3].set_xlabel("Alpha ",fontsize='10')
+    axes[3].set_ylabel("Strong Bracketing Line Search Alpha",fontsize='10')
     plt.tight_layout()
     plt.show()
 
@@ -195,8 +202,8 @@ def plotting_CG_Path(optimal_path,path_ev,func_v,gradlist,alpha_z,alpha_rejected
 
 # Creating a plot for the penalty function and path functions
 
-def plot_convergence(penal_GD,Path_GD,Penal_CG,path_GC,N,SmGD,SmCg):
-    fig, ax = plt.subplots(1,3,figsize=(15, 5))
+def plot_convergence(penal_GD,Path_GD,Penal_CG,path_GC,N,SmGD,SmCg,gradientCG,gradientGD):
+    fig, ax = plt.subplots(1,4,figsize=(15, 5))
     x_axis = [i for i in range(0,N)]
     y_CG_path = path_GC
     y_CG_cost = Penal_CG
@@ -219,12 +226,20 @@ def plot_convergence(penal_GD,Path_GD,Penal_CG,path_GC,N,SmGD,SmCg):
     ax[1].set_xlabel('Iterations')
     ax[1].set_ylabel('Penalty cost')
     ax[1].set_title('Penalty function (1): GD vs CG')
-
-    ax[2].plot(x_axis,SmGD,color = 'darkorange',label='GD',marker='.',linestyle = 'dashdot')
-    ax[2].plot(x_axis,SmCg, color = 'green',label='GD',marker ='.',linestyle = 'dashdot')
+    
+    ax[2].plot(x_axis,SmGD,color = 'darkorange',label='GD')
+    ax[2].plot(x_axis,SmCg, color = 'green',label='GD')
     ax[2].set_xlabel('Iterations')
     ax[2].set_ylabel('Smootness of trajectory')
-    ax[2].set_title('Smootness: GD vs CG')
+    ax[2].set_title('Smootness Visulization: GD vs CG')
+
+
+    ax[3].plot(x_axis,gradientCG,color = 'darkorange',label='GD',marker='.',linestyle = 'dashdot')
+    ax[3].plot(x_axis,gradientGD, color = 'green',label='GD',marker ='.',linestyle = 'dashdot')
+    ax[3].set_xlabel('Iterations')
+    ax[3].set_ylabel('Convergence of Gradient')
+    ax[3].set_title('Gradient Convergence: GD vs CG')
+   
    
     
    
@@ -240,33 +255,30 @@ def plot_convergence(penal_GD,Path_GD,Penal_CG,path_GC,N,SmGD,SmCg):
 
 # #Intializing Conjugate Gradient
 
-# trav_path,optimal_path,funcv,grad_list,stepx,alpha_list,rejected_list,alpha_tried_list,pena_list_CG,path_list_CG, SMC = Conjugate_Gradient(trajectory_path, alpha0, l, m, ob_main, N_amount, D_matrix, x_start, x_goal).opt(N_amount)
-
-Quasi_NewtonMethod(trajectory_path,x_start,x_goal,alpha0,l,m,ob_main,D_matrix,N_amount).opt_BFGS(N_amount)
-
-# #plotting_CG_Path(optimal_path,trav_path,funcv,grad_list,alpha_list,rejected_list,alpha_tried_list)
+trav_path,optimal_path_CG,funcv,gradient_CG,stepx,alpha_list,rejected_list,alpha_tried_list,pena_list_CG,path_list_CG, smc, converlist = Conjugate_Gradient(trajectory_path, alpha0, l, m, ob_main, N_amount, D_matrix, x_start, x_goal).opt(N_amount)
 
 
-# trav_x, optimal_x, f_values, alphz, stepz, gradlist, pathlist_GD, penlist_GD, SMG = GradientDescent(trajectory_path, alpha0, l, m, ob_main, N_amount, D_matrix, x_start, x_goal).opt(N_amount)
-
-# plotting_Gradient_Descent(trav_x,optimal_x,gradlist,f_values,alphz)
-
-# path_GradientDescent = pathlist_GD
-# penalty_GradientDescent = penlist_GD
-# path_ConjugateGradient = path_list_CG
-# Penalty_ConjugateGradient = pena_list_CG
-# smoothnessG = SMG
-# SmootnnessC = SMC   
-
-# plot_convergence(penalty_GradientDescent,path_GradientDescent,Penalty_ConjugateGradient,path_ConjugateGradient,N_amount,SMG,SMC)
+plotting_CG_Path(optimal_path_CG,funcv,gradient_CG,alpha_list,rejected_list,alpha_tried_list)
 
 
+trav_x, optimal_x, f_values, alphz, stepz, gradlist, pathlist_GD, penlist_GD, SMG,converlistG = GradientDescent(trajectory_path, alpha0, l, m, ob_main, N_amount, D_matrix, x_start, x_goal).opt(N_amount)
+
+plotting_Gradient_Descent(optimal_x,gradlist,f_values,alphz)
 
 
+plotting_pathevolution(trav_x)
+
+path_GradientDescent = pathlist_GD
+path_ConjugateGradient = path_list_CG
+penalty_GradientDescent = penlist_GD
+Penalty_ConjugateGradient = pena_list_CG
+smoothnessG = SMG
+SmootnnessC = smc   
+
+plot_convergence(penalty_GradientDescent,path_GradientDescent,Penalty_ConjugateGradient,path_ConjugateGradient,N_amount,smoothnessG,SmootnnessC,converlist,converlistG)
 
 
 
-# #Plot penalty cost different penalty functions , and Convergence by the gradient use lin.norm using the 
 
 
 

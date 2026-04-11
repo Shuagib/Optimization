@@ -1,6 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
-from objective_func import objective_function, gradient_objective
+from objective_func import objective_function
 from Path import *
 from Visualization import x_start, x_goal
 import smooth as sm

@@ -1,8 +1,10 @@
-from objective_func import gradient_objective, objective_function
+from objective_func import objective_function
 import numpy as np
-from Bt_LineSearch import backtracking_line_search
+from line_search import backtracking_line_search
 import autograd.numpy as an
-
+from F_L import func_L
+from F_O import f_O,f_O_2
+from smooth import smoothness_residuals
 class DescentMethod:
     alpha : float 
 
@@ -20,7 +22,7 @@ class GradientDescent(DescentMethod):
         self.n = n
         self.obj = obj
         self.D = D
-        self.gradient = gradient_objective(self.x, self.n, self.start, self.goal, self.D, self.obj, self.lam, self.mu)
+        self.gradient = objective_function(x,self.n, self.start , self.goal ,self.D,self.obj,self.lam,self.mu)[1]
         self.f = lambda x: objective_function(x,self.n, self.start , self.goal ,self.D,self.obj,self.lam,self.mu)[0]
         if lam  < 0 or mu < 0:
             raise ValueError("Error: Must be strictly bigger than 0")
@@ -28,15 +30,15 @@ class GradientDescent(DescentMethod):
 
     def step(self):
         """Compute the next design point according to:"""
-        grad_func = lambda y: gradient_objective(y, self.n, self.start, self.goal, self.D, self.obj, self.lam, self.mu)
-        grad = gradient_objective(self.x, self.n, self.start, self.goal, self.D, self.obj, self.lam, self.mu)
+        grad_func = lambda y: objective_function(y,self.n, self.start , self.goal ,self.D,self.obj,self.lam,self.mu)[1]
+        grad = objective_function(self.x,self.n, self.start , self.goal ,self.D,self.obj,self.lam,self.mu)[1]
         d = -grad                   
         alpha = backtracking_line_search(self.f, grad_func, self.x, d, self.alpha)
         self.x = self.x - alpha * grad
         return self.x , alpha, grad
     
 
-    def opt(self,iter=100):
+    def opt(self,iter):
         """ Gradient descent for using Conjugate method to find optimial design point"""
         x_poins = []
         f_values = []
@@ -51,23 +53,26 @@ class GradientDescent(DescentMethod):
 
 
         while k < iter:
-            fx, lenpath, penalty,smooth = objective_function(self.x,self.n, self.start , self.goal ,self.D,self.obj,self.lam,self.mu)
-            print(f"Smoothness{smooth}")
+            fx, nabla =  objective_function(self.x,self.n, self.start , self.goal ,self.D,self.obj,self.lam,self.mu)
+            smooth = smoothness_residuals(self.x,self.n,self.start,self.goal,self.D)
+            penalty = f_O(self.x,self.obj)
+            lenpath = func_L(self.x)
+          
+           
             smothlist.append(smooth)
             f_values.append(fx)
             penlist.append(penalty)
-            print(penlist,'This is The Penalty list')
+            print(penlist)
+
             pathlist.append(lenpath)
-            print(pathlist,'This is the Path list')
+          
             x_poins.append(self.x[:]) #Creating a new list
             x_old = self.x[:]
-            step_x, alphaz, grad = self.step()
-            #print(grad,"GD gradient")
-            print(np.linalg.norm(grad),"GD norm gradient")
-            scalr_grad = np.linalg.norm(grad)
+            step_x, alphaz, nabla = self.step()
+           
+            scalr_grad = np.linalg.norm(nabla)
             gradlist.append(scalr_grad)
-            #print(self.x)
-            #print(alphaz, "This is a alpha")
+        
             alphz.append(alphaz)
             stepz.append(step_x)
             f_new = objective_function(self.x,self.n, self.start , self.goal ,self.D,self.obj,self.lam,self.mu)[0]
@@ -76,8 +81,8 @@ class GradientDescent(DescentMethod):
                 print(f"f_old: {f_old}, f_new: {f_new}, diff: {f_old - f_new}")
                 break
             k +=1 
-            #print(alphz)
-        return [x_poins, self.x, f_values,alphz, stepz,gradlist,pathlist,penlist,smothlist]
+           
+        return [x_poins, self.x, f_values,alphz, stepz,nabla,pathlist,penlist,smothlist,gradlist]
 
 
 

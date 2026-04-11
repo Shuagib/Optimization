@@ -14,7 +14,6 @@ def build_D(n):
     return D
 
 
-
 #Shape the dimensions
 def flatten(x):
     """Removes start and goal points and flattens to 1D."""

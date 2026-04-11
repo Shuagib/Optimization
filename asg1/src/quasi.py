@@ -1,8 +1,8 @@
 import torch.autograd as ta
 import numpy as np
-from objective_func import gradient_objective, objective_function,gradient_objective,objective_function
+from objective_func import objective_function
 import numpy as np
-from strong_brack import strong_backtracking
+from line_search import strong_backtracking
 class DescentMethod:
     alpha : float 
 
@@ -20,9 +20,9 @@ class Quasi_NewtonMethod(DescentMethod):
         self.obj = obj
         self.D = D
         self.Q =  np.identity(2*(self.n-2),dtype = float)  #Defining the identity matrix so it fits a path 2(n-2)
-        self.g = gradient_objective(self.x, self.n, self.x_start, self.x_goal, self.D, self.obj, self.lam, self.mu)
+        self.g = objective_function(self.x, self.n, self.x_start, self.x_goal, self.D, self.obj, self.lam, self.mu)[4]
         self.func = lambda x: objective_function(x, self.n, self.x_start, self.x_goal, self.D, self.obj, self.lam, self.mu)[0] #Creating one function so it's easier to pass since strongbracket uses f(x+alpha*d)
-        self.nabla = lambda y: gradient_objective(y, self.n, self.x_start, self.x_goal, self.D, self.obj, self.lam, self.mu)
+        self.nabla = lambda y: objective_function(y, self.n, self.x_start, self.x_goal, self.D, self.obj, self.lam, self.mu)[4]
 
         if lam  < 0 or mu < 0:
             raise ValueError("Error: Must be strictly bigger than 0")
@@ -59,7 +59,10 @@ class Quasi_NewtonMethod(DescentMethod):
         f_value = []
         pen_val = []
         path_val = []
+        alpha_list = []
         sm = []
+        optimal_x = []
+        grad_list = []
         k = 0
         while np.linalg.norm(self.g) > ep: #Convergences rate
             fx, pen, path, smooth = objective_function(self.x, self.n, self.x_start, self.x_goal, self.D, self.obj, self.lam, self.mu)
@@ -67,16 +70,21 @@ class Quasi_NewtonMethod(DescentMethod):
             pen_val.append(pen)
             path_val.append(path)
             sm.append(smooth)
-            print(f_value)
+            #print(f_value)
             x_point.append(self.x[:]) #Keeping track of all the tracjectories
-            print(x_point)
-            new_x, alpha = self.DFP()
+            #print(x_point)
+            new_x, alpha,rejected,tried_alpha = self.DFP()
+            optimal_x.append(new_x)
+            alpha_list.append(alpha)
             self.g = self.nabla(new_x)
+            grad_list.append(self.g)
+            scal_g = np.linalg.norm(grad_list)
+            print(scal_g)
             k +=1 
             #We are running 10 iteration as standard, 
             if k >= kmax:
                 break 
-        return new_x, alpha, x_point,f_value #Returns a lost of given x points that one have traveled, good enough alphas, All the old positiosns and function values 
+        return optimal_x, alpha_list, x_point,f_value,rejected,tried_alpha  #Returns a lost of given x points that one have traveled, good enough alphas, All the old positiosns and function values 
     
 
     def opt_BFGS(self,kmax):
@@ -88,14 +96,16 @@ class Quasi_NewtonMethod(DescentMethod):
         while np.linalg.norm(self.g) > ep: #Convergences rate tjeeking the gradient
             fx, pen, path, smooth = objective_function(self.x, self.n, self.x_start, self.x_goal, self.D, self.obj, self.lam, self.mu)
             f_value.append(fx) #Function values
-            print(f_value)
+            #print(f_value)
             x_point.append(self.x.copy()) #Keeping track of all the tracjectories
-            print(x_point)
+            #print(x_point)
             new_x, alpha, alpha_rejected, alpha_tried = self.BFGS()
 
             self.g = self.nabla(new_x)
             grad.append(self.g)
-            print(grad)
+            #print(grad)
+            sc = np.linalg.norm(grad)
+            print(sc)
             k +=1 
             #We are running 10 iteration as standard, 
             if k >= kmax:
