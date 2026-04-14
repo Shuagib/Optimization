@@ -24,8 +24,8 @@ x_axis = np.linspace(start_point_x, end_point_x, N_amount)
 y_axis = np.linspace(start_point_y, end_point_y, N_amount)
 
 ### Let's visalize it 
-l = 1 #Smoothness
-m =  20 #Penalty
+l = 3 #Smoothness
+m = 15 #Penalty
 D_matrix = build_D(N_amount)
 alpha0 = 0.5
 
@@ -255,18 +255,29 @@ def plot_convergence(penal_GD,Path_GD,Penal_CG,path_GC,N,SmGD,SmCg,gradientCG,gr
 
 # #Intializing Conjugate Gradient
 
+#Conjugate Gradient
 trav_path,optimal_path_CG,funcv,gradient_CG,stepx,alpha_list,rejected_list,alpha_tried_list,pena_list_CG,path_list_CG, smc, converlist = Conjugate_Gradient(trajectory_path, alpha0, l, m, ob_main, N_amount, D_matrix, x_start, x_goal).opt(N_amount)
 
-
-plotting_CG_Path(optimal_path_CG,funcv,gradient_CG,alpha_list,rejected_list,alpha_tried_list)
-
-
+#Gradient Descent
 trav_x, optimal_x, f_values, alphz, stepz, gradlist, pathlist_GD, penlist_GD, SMG,converlistG = GradientDescent(trajectory_path, alpha0, l, m, ob_main, N_amount, D_matrix, x_start, x_goal).opt(N_amount)
 
-plotting_Gradient_Descent(optimal_x,gradlist,f_values,alphz)
+
 
 
 plotting_pathevolution(trav_x)
+
+
+plotting_pathevolution(trav_path)
+
+
+
+#plotting_CG_Path(optimal_path_CG,funcv,gradient_CG,alpha_list,rejected_list,alpha_tried_list)
+
+
+
+#plotting_Gradient_Descent(optimal_x,gradlist,f_values,alphz)
+
+
 
 path_GradientDescent = pathlist_GD
 path_ConjugateGradient = path_list_CG
@@ -275,7 +286,7 @@ Penalty_ConjugateGradient = pena_list_CG
 smoothnessG = SMG
 SmootnnessC = smc   
 
-plot_convergence(penalty_GradientDescent,path_GradientDescent,Penalty_ConjugateGradient,path_ConjugateGradient,N_amount,smoothnessG,SmootnnessC,converlist,converlistG)
+#plot_convergence(penalty_GradientDescent,path_GradientDescent,Penalty_ConjugateGradient,path_ConjugateGradient,N_amount,smoothnessG,SmootnnessC,converlist,converlistG)
 
 
 

@@ -38,7 +38,7 @@ class GradientDescent(DescentMethod):
         return self.x , alpha, grad
     
 
-    def opt(self,iter):
+    def opt(self,kmax):
         """ Gradient descent for using Conjugate method to find optimial design point"""
         x_poins = []
         f_values = []
@@ -52,7 +52,7 @@ class GradientDescent(DescentMethod):
         smothlist = []
 
 
-        while k < iter:
+        while k < kmax:
             fx, nabla =  objective_function(self.x,self.n, self.start , self.goal ,self.D,self.obj,self.lam,self.mu)
             smooth = smoothness_residuals(self.x,self.n,self.start,self.goal,self.D)
             penalty = f_O(self.x,self.obj)

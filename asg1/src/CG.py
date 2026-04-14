@@ -34,9 +34,9 @@ class Conjugate_Gradient(DescentMethod):
         func = lambda x: objective_function(x,self.n, self.start , self.goal ,self.D,self.obj,self.lam,self.mu)[0]
         grad = objective_function(self.x, self.n, self.start, self.goal, self.D, self.obj, self.lam, self.mu)[1]#NewGradient
         beta_PR =  np.dot(np.transpose(grad), (grad - self.gradient)) / np.dot(np.transpose(self.gradient), self.gradient) 
-        beta_FR = max(beta_PR,0)
+        beta_PR = max(beta_PR,0)
         old_d = self.d
-        self.d = - grad  + beta_FR * old_d #Descent direction
+        self.d = - grad  + beta_PR * old_d #Descent direction
         alpha_z,  rejected, tried_alpha = strong_backtracking(func,grad_func,self.x, self.d,self.alpha) #Using Stron_backtracking as line searc
         updat_x = self.x + alpha_z * self.d
         self.gradient = grad #Old gradient
