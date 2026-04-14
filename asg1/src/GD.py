@@ -55,7 +55,7 @@ class GradientDescent(DescentMethod):
         while k < kmax:
             fx, nabla =  objective_function(self.x,self.n, self.start , self.goal ,self.D,self.obj,self.lam,self.mu)
             smooth = smoothness_residuals(self.x,self.n,self.start,self.goal,self.D)
-            penalty = f_O(self.x,self.obj)
+            penalty = f_O_2(self.x,self.obj,self.alpha)
             lenpath = func_L(self.x)
           
            

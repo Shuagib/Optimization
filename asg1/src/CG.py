@@ -63,7 +63,7 @@ class Conjugate_Gradient(DescentMethod):
         while k < kmax: #Determination method if the new postion and old postion has very little divergence then step
             fx, nabla =  objective_function(self.x,self.n, self.start , self.goal ,self.D,self.obj,self.lam,self.mu)
             smooth = smoothness_residuals(self.x,self.n,self.start,self.goal,self.D)
-            pena = f_O(self.x,self.obj)
+            pena = f_O_2(self.x,self.obj,self.alpha)
             path = func_L(self.x)
             #print(f"Smoothness is {smooth}")
             smooth_list.append(smooth)
