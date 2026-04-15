@@ -6,6 +6,7 @@ from F_O import *
 from GD import *
 from CG import * 
 from quasi import *
+from numpy import random as ra
 #Choose start and Goal
 start_point  = (0.5,0.0)
 end_point = (19.0,22.0)
@@ -15,7 +16,7 @@ start_point_x, start_point_y = start_point
 end_point_x, end_point_y = end_point
 
 #Amount of Points 
-N_amount = 20
+N_amount = 200
 
 
 
@@ -32,8 +33,18 @@ alpha0 = 0.5
 x_start = np.array([start_point_x, start_point_y])
 x_goal = np.array([end_point_x, end_point_y])
 
+
 initial_path = np.column_stack((x_axis, y_axis))
+# noise = ra.normal(0.000001, size = initial_path.shape)
+# noise[0] = [0.0,0.0]
+# noise[-1] = [0.0,0.0]
+# initial_path += noise
+
+
+
 trajectory_path = flatten(initial_path)
+
+
 ob_main = [((16.0, 19.0), 3), (( 6.0 , 7.0), 3)]
 
 
@@ -271,11 +282,11 @@ plotting_pathevolution(trav_path)
 
 
 
-#plotting_CG_Path(optimal_path_CG,funcv,gradient_CG,alpha_list,rejected_list,alpha_tried_list)
+plotting_CG_Path(optimal_path_CG,funcv,gradient_CG,alpha_list,rejected_list,alpha_tried_list)
 
 
 
-#plotting_Gradient_Descent(optimal_x,gradlist,f_values,alphz)
+plotting_Gradient_Descent(optimal_x,gradlist,f_values,alphz)
 
 
 

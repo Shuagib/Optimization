@@ -2,8 +2,7 @@
 from autograd import grad
 import autograd.numpy as np
 import math as ma 
-
-
+import numpy as nu
 
 def detector(x:np.array, obj):
    """ Measures distance between a point and the center of a obstacle """
@@ -20,14 +19,18 @@ def f_O(x:np.array, obj):
       r  = y[1] #Get the radius
       i = 0 # Control variable 
       while i < N: #Continues running as long we are i are smaller then the lenght
-         dis = detector(x[i],y)  #Creating penalty givn each trajcectory and object
-         if dis > r: #First condtion measure how if we are far enough away
-            dis_diff_pow = (dis-r)**2  #add square it
-            penalty += 1/dis_diff_pow #Add small penalty since it since we are far awy
-         else:
-            penalty += np.inf #Reaches the obstacle need large penality and it gives a simple penalty that is easy to correct
+         dis = detector(x[i],y)
+         penalty += np.where(dis > r, (1/(dis-r)**2),np.inf)
+      #    if dis > r:  #Creating penalty givn each trajcectory and object
+      #       np.where(dis > r) #First condtion measure how if we are far enough away
+      #       dis_diff_pow = (dis-r)**2  #add square it
+      #       penalty += nu.where(1/dis_diff_pow)#Add small penalty since it since we are far awy
+      # else:
+      #    penalty += nu.inf #Reaches the obstacle need large penality and it gives a simple penalty that is easy to correct
          i += 1 
    return penalty
+
+
 
 def f_O_2(x: np.array,obj,alpha=0.01):
    """ Obstacle model. The second penalty"""
@@ -52,7 +55,3 @@ def gradient_f_O_1(x, obj):
 
 def gradient_f_O_2(x, obj, alpha=0.01):
     return grad_f_O_2(x, obj, alpha)
-
-number = np.inf
-
-print(number)

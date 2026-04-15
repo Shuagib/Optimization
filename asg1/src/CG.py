@@ -70,7 +70,7 @@ class Conjugate_Gradient(DescentMethod):
             func_values.append(fx) #Function value
             #print(func_values, "f(x)")
             penalty_list.append(pena)
-            print(penalty_list)
+            print(f' CG{penalty_list}')
             path_list.append(path)
             x_points.append(self.x[:]) #current Positions append in a list 
             updat_x, alpha_z,nabla, rejected, tried_alpha = self.step()

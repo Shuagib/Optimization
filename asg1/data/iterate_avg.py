@@ -82,15 +82,15 @@ print(fc12_params[1].numel())
 
 # Training loop
 criterion = nn.CrossEntropyLoss()
-optimizer = optim.SGD(model.parameters(), lr= 0.35) #Intilize learning rate
+optimizer = optim.SGD(model.parameters(), lr= 0.3) #Intilize learning rate
 swa_model  = optim.swa_utils.AveragedModel(model) #Averaging model weights pr. iteration
-scheduler = optim.lr_scheduler.CosineAnnealingLR(optimizer,T_max=10) #It will change learning rate each time 
-
+scheduler = optim.lr_scheduler.ExponentialLR(optimizer,gamma=0.5) #It will change learning rate each time 
 
 train_losses = []
 test_losses = []
-
+acc = []
 step = 0
+decayinglr = [0.32]
 for epoch in range(n_epochs):
     model.train()
     train_loss_SGD = 0
@@ -100,13 +100,16 @@ for epoch in range(n_epochs):
         loss_SGD = criterion(output, labels)
         train_loss_SGD += criterion(output, labels).item()
         loss_SGD.backward()
-        optimizer.step()
+        batchlr = optimizer.step()
         step += 1
     scheduler.step()
     swa_model.update_parameters(model)
     train_loss_SGD /= len(train_loader)
     train_losses.append((step, train_loss_SGD))
+    decayinglr.append(scheduler.get_lr()[0]) 
     print(f'Epoch {epoch}, Step {step}, Loss: {loss_SGD.item()}')
+    print(f'lr { scheduler.get_lr()} lr list {decayinglr}', )
+    
 
     model.eval()
     test_loss_SGD = 0
@@ -120,9 +123,10 @@ for epoch in range(n_epochs):
 
     test_loss_SGD /= len(test_loader)
     test_losses.append((step, test_loss_SGD))
+    ac_val = 100. * correct / len(test_loader.dataset)
     print(f'Baseline SGD Test set: Average loss: {test_loss_SGD}, Train set: {train_loss_SGD} \
-        Accuracy: {correct}/{len(test_loader.dataset)} ({100. * correct / len(test_loader.dataset)}%)')
-  
+        Accuracy: {correct}/{len(test_loader.dataset)} ({ac_val}%)')
+    acc.append(ac_val)
 
 
 
@@ -132,18 +136,30 @@ for epoch in range(n_epochs):
 train_steps, train_loss_SGD = zip(*train_losses)
 test_steps, test_loss_SGD = zip(*test_losses)
 
+fig, ax = plt.subplots(1,3)
+ax[0].plot(range(1,n_epochs+1), test_loss_SGD, label='Test Loss  SGD', linestyle='--', color = 'blue')
+ax[0].plot(range(1,n_epochs+1), train_loss_SGD, label='Training Loss SGD',color='blue')
+ax[0].set_title(' Training and validation loss')
+ax[0].set_xlabel('Epoch')
+ax[0].set_ylabel('Loss')
 
-plt.plot(range(1,n_epochs+1), test_loss_SGD, label='Test Loss  SGD', linestyle='--', color = 'blue')
-plt.plot(range(1,n_epochs+1), train_loss_SGD, label='Training Loss SGD',color='blue')
+ax[1].plot(range(0,n_epochs+1), decayinglr, label = 'SGD ',color = 'green')
+ax[1].set_title('Learning rate: ExponentialLR')
+ax[1].set_xlabel('Epoch')
+ax[1].set_ylabel('Learning rate')
+ax[1].grid()
 
+ax[2].plot(range(1,n_epochs +1), acc,color = 'orange')
+ax[2].set_title('Accuracy test')
+ax[2].set_xlabel('Epoch')
+ax[2].set_ylabel('Accuracy')
+ax[2].grid()
 
-plt.title(' SGD Exponential decreasing learning rate:Training and validation loss')
-plt.xlabel('Epochs')
-plt.ylabel('Loss')
+ 
 plt.grid(True)
 #Creating a box that isn't too large
 plt.tight_layout()
-plt.savefig('SGD_iteatemethod.png', bbox_inches='tight')
+plt.savefig('Accuracy_iteatemethod.png', bbox_inches='tight')
 plt.show()
 
 

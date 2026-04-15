@@ -62,7 +62,7 @@ class GradientDescent(DescentMethod):
             smothlist.append(smooth)
             f_values.append(fx)
             penlist.append(penalty)
-            print(penlist)
+            print(f'GD {penlist}')
 
             pathlist.append(lenpath)
           
