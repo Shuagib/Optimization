@@ -16,7 +16,7 @@ start_point_x, start_point_y = start_point
 end_point_x, end_point_y = end_point
 
 #Amount of Points 
-N_amount = 200
+N_amount = 100
 
 
 
@@ -25,7 +25,7 @@ x_axis = np.linspace(start_point_x, end_point_x, N_amount)
 y_axis = np.linspace(start_point_y, end_point_y, N_amount)
 
 ### Let's visalize it 
-l = 3 #Smoothness
+l = 20 #Smoothness
 m = 15 #Penalty
 D_matrix = build_D(N_amount)
 alpha0 = 0.5
@@ -35,11 +35,12 @@ x_goal = np.array([end_point_x, end_point_y])
 
 
 initial_path = np.column_stack((x_axis, y_axis))
-# noise = ra.normal(0.000001, size = initial_path.shape)
+# noise = ra.normal(0.01, size = initial_path.shape)
 # noise[0] = [0.0,0.0]
 # noise[-1] = [0.0,0.0]
 # initial_path += noise
 
+#Fixing porblem with Noise problems 
 
 
 trajectory_path = flatten(initial_path)
@@ -297,7 +298,7 @@ Penalty_ConjugateGradient = pena_list_CG
 smoothnessG = SMG
 SmootnnessC = smc   
 
-#plot_convergence(penalty_GradientDescent,path_GradientDescent,Penalty_ConjugateGradient,path_ConjugateGradient,N_amount,smoothnessG,SmootnnessC,converlist,converlistG)
+plot_convergence(penalty_GradientDescent,path_GradientDescent,Penalty_ConjugateGradient,path_ConjugateGradient,N_amount,smoothnessG,SmootnnessC,converlist,converlistG)
 
 
 

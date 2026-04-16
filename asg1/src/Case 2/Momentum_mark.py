@@ -604,7 +604,7 @@ print(fc12_params[1].numel())
 
 # Training loop
 criterion = nn.CrossEntropyLoss()
-optimizer_nadam = optim.NAdam(model.parameters(), lr=0.001,momentum_decay= 4e-3)
+optimizer_nadam = optim.NAdam(model.parameters(), lr=0.5,momentum_decay= 4e-3)
 
 
 train_losses_nadam = []
@@ -642,10 +642,6 @@ for epoch in range(n_epochs):
         Accuracy: {correct}/{len(test_loader.dataset)} ({100. * correct / len(test_loader.dataset)}%)')
 
 
-# Adjust layout and show the plot
-plt.tight_layout()
-# plt.show()
-#plt.savefig('loss2.png')
 
 
 #  plot train and test losses for SGD Baseline

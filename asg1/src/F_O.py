@@ -20,7 +20,7 @@ def f_O(x:np.array, obj):
       i = 0 # Control variable 
       while i < N: #Continues running as long we are i are smaller then the lenght
          dis = detector(x[i],y)
-         penalty += np.where(dis > r, (1/(dis-r)**2),np.inf)
+         penalty += np.where(dis > r, (1/(dis-r)**2), np.inf)
       #    if dis > r:  #Creating penalty givn each trajcectory and object
       #       np.where(dis > r) #First condtion measure how if we are far enough away
       #       dis_diff_pow = (dis-r)**2  #add square it

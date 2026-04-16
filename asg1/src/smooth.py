@@ -1,7 +1,7 @@
 import numpy as np
 from scipy.optimize import least_squares
 import torch as tp
-
+from autograd import grad
 
 # MATRIX D given in the assingment
 
@@ -71,3 +71,4 @@ def gradient_smoothness(x_flat, n, x_start, x_goal, D):
     x    = unflatten(x_flat, n, x_start, x_goal) 
     grad = 2 * np.transpose(D) @ D @ x                         
     return grad[1:-1].flatten() 
+
