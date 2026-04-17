@@ -27,7 +27,7 @@ x_axis = np.linspace(start_point_x, end_point_x, N_amount)
 y_axis = np.linspace(start_point_y, end_point_y, N_amount)
 
 ### Let's visalize it 
-l = 20 #Smoothness
+l = 2 #Smoothness
 m = 15 #Penalty
 D_matrix = build_D(N_amount)
 alpha0 = 0.5
@@ -410,18 +410,18 @@ trav_x, optimal_x, f_values, alphz, stepz, gradlist, pathlist_GD, penlist_GD, SM
 
 
 
-plotting_pathevolution(trav_x)
+#plotting_pathevolution(trav_x)
 
 
-plotting_pathevolution(trav_path)
-
-
-
-plotting_CG_Path(optimal_path_CG,funcv,gradient_CG,alpha_list,rejected_list,alpha_tried_list)
+#plotting_pathevolution(trav_path)
 
 
 
-plotting_Gradient_Descent(optimal_x,gradlist,f_values,alphz)
+#plotting_CG_Path(optimal_path_CG,funcv,gradient_CG,alpha_list,rejected_list,alpha_tried_list)
+
+
+
+#plotting_Gradient_Descent(optimal_x,gradlist,f_values,alphz)
 
 
 

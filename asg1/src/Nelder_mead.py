@@ -8,8 +8,8 @@ from F_L import func_L
 
 path = np.column_stack((x_axis,y_axis))
 alpha = 1
-l = 3 #Smoothness
-m = 15 #Penalty
+#l = 3 #Smoothness
+#m = 15 #Penalty
 D_matrix = build_D(N_amount)
 alpha0 = 1
 ob_main = [((16.0, 19.0), 3), (( 6.0 , 7.0), 3)]
@@ -53,6 +53,7 @@ class NMOptimizer:
             x_new = np.array(x_initial_flat, copy=True)
             x_new[i] += 0.5 
             simplex.append(x_new)
+
 
         f = self.get_objective
         
@@ -122,6 +123,9 @@ class NMOptimizer:
     def run(self, initial_path, **kwargs):
         """Helper to flatten, run NM, and unflatten the result."""
         x_initial_flat = sm.flatten(initial_path)
+
+        print(f"DEBUG: Flattened size is {len(x_initial_flat)}")
+        print(f"DEBUG: Expected size for N={self.N} is {(self.N-2)*2}")
         
         print("Starting Nelder-mead...")
         optimized_flat, f_history, path_history = self.nelder_mead(x_initial_flat, **kwargs)
