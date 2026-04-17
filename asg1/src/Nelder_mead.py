@@ -3,7 +3,6 @@ import smooth as sm
 from smooth import build_D
 from objective_func import objective_function
 from Path import *
-from Visualization import N_amount, x_start, x_goal
 from F_O import f_O, f_O_2
 from F_L import func_L
 
