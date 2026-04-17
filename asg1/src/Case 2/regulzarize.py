@@ -9,7 +9,8 @@ import numpy as np
 from prettytable import PrettyTable
 
 #Global epochs
-n_epochs = 30
+n_epochs = 10
+
 
 seed = 42
 torch.manual_seed(seed)
@@ -29,7 +30,7 @@ print("number of training samples: " + str(len(train_dataset)) + "\n" +
 print("datatype of the 1st training sample: ", train_dataset[0][0].type())
 print("size of the 1st training sample: ", train_dataset[0][0].size())
 
-batch_size = 128
+batch_size = 64
 
 # Create data loaders.
 train_loader = torch.utils.data.DataLoader(dataset=train_dataset, batch_size=batch_size, shuffle=True)
@@ -90,10 +91,10 @@ print(fc12_params[1].numel())
 
 # Training loop
 criterion = nn.CrossEntropyLoss()
-optimizer = optim.SGD(model_SGD.parameters(), lr=0.8,weight_decay= 0.001)
+optimizer = optim.SGD(model_SGD.parameters(), lr=0.2)
 swa_model_swg  = optim.swa_utils.AveragedModel(model_SGD)
-scheduler_SWG = optim.lr_scheduler.CosineAnnealingLR(optimizer,T_max= 10)
-
+scheduler_SWG = optim.lr_scheduler.ExponentialLR(optimizer,gamma= 0.9)
+scheduler_SWG2 = optim.lr_scheduler.CosineAnnealingLR(optimizer,T_max=10)
 
 train_losses = []
 test_losses = []
@@ -110,7 +111,8 @@ for epoch in range(n_epochs):
         loss.backward()
         optimizer.step()
         step += 1
-    scheduler_SWG.step()
+    #scheduler_SWG.step()
+    #scheduler_SWG2.step()
     swa_model_swg.update_parameters(model_SGD)
     train_loss /= len(train_loader.dataset)
     train_losses.append((step, train_loss))
@@ -184,10 +186,10 @@ print(fc12_params[1].numel())
 
 # Training loop
 criterion = nn.CrossEntropyLoss()
-optimizer_adam = optim.Adam(model.parameters(), lr=0.007,weight_decay= 0.001)
+optimizer_adam = optim.AdamW(model.parameters(), lr=0.0001)
 swa_model_adam  = optim.swa_utils.AveragedModel(model)
-scheduler = optim.lr_scheduler.ConstantLR(optimizer_adam,factor= 0.45,total_iters= 10)
-
+scheduler = optim.lr_scheduler.CosineAnnealingLR(optimizer_adam, T_max= 30)
+scheduler2 = optim.lr_scheduler.ExponentialLR(optimizer_adam,gamma= 0.7)
 
 train_losses_adam = []
 test_losses_adam = []
@@ -204,8 +206,9 @@ for epoch in range(n_epochs):
         loss.backward()
         optimizer_adam.step()
         step += 1
-    scheduler.step()
-    swa_model_adam.update_parameters(model)
+    #scheduler.step()
+    #scheduler2.step()
+    #swa_model_adam.update_parameters(model)
     train_loss_adam /= len(train_loader.dataset)
     train_losses_adam.append((step, train_loss_adam))
     print(f'Epoch {epoch}, Step {step}, Loss: {loss.item()}')
@@ -279,9 +282,11 @@ print(fc12_params[1].numel())
 
 # Training loop
 criterion = nn.CrossEntropyLoss()
-optimizer_nadam = optim.NAdam(model_na.parameters(), lr= 0.007,momentum_decay= 0.01, weight_decay= 0.001) 
+optimizer_nadam = optim.NAdam(model_na.parameters(), lr= 0.0001,momentum_decay= 0.01) 
 swa_model  = optim.swa_utils.AveragedModel(model_na)
-scheduler_Nadam = optim.lr_scheduler.CosineAnnealingLR(optimizer_nadam,T_max= 10)
+scheduler_Nadam = optim.lr_scheduler.ExponentialLR(optimizer_nadam,gamma= 0.8)
+scheduler3 = optim.lr_scheduler.CosineAnnealingLR(optimizer_nadam,T_max=10 )
+scheduler4 = optim.lr_scheduler.PolynomialLR(optimizer_nadam,total_iters= 10)
 train_losses_nadam = []
 test_losses_nadam = []
 ac_na = []
@@ -297,8 +302,10 @@ for epoch in range(n_epochs):
         loss.backward()
         optimizer_nadam.step()
         step += 1
-    scheduler_Nadam.step()
-    swa_model.update_parameters(model_na)
+    #scheduler3.step()
+    #scheduler_Nadam.step()
+    #scheduler4.step()
+    #swa_model.update_parameters(model_na)
     train_loss_nadam /= len(train_loader.dataset)
     train_losses_nadam.append((step, train_loss_nadam))
     print(f'Epoch {epoch}, Step {step}, Loss: {loss.item()}')
