@@ -1,7 +1,7 @@
 from objective_func import objective_function
 import numpy as np
 from line_search import  strong_backtracking
-from Smooth import flatten as fl,gradient_smoothness,smoothness_residuals
+from F_S import flatten as fl,gradient_smoothness,smoothness_residuals
 import autograd.numpy as an
 from F_O import f_O,f_O_2
 from F_L import func_L
@@ -59,40 +59,29 @@ class Conjugate_Gradient(DescentMethod):
         path_list = []
         smooth_list = []
         converlist = []
+        
+        print(f"--- Starting Conjugate Gradient (Max Iterations: {kmax}) ---")
+        
         #path,pena,smooth
         while k < kmax: #Determination method if the new postion and old postion has very little divergence then step
             fx, nabla =  objective_function(self.x,self.n, self.start , self.goal ,self.D,self.obj,self.lam,self.mu)
             smooth = smoothness_residuals(self.x,self.n,self.start,self.goal,self.D)
             pena = f_O_2(self.x,self.obj,self.alpha)
             path = func_L(self.x)
-            #print(f"Smoothness is {smooth}")
             smooth_list.append(smooth)
             func_values.append(fx) #Function value
-            #print(func_values, "f(x)")
             penalty_list.append(pena)
-            print(f' CG{penalty_list}')
             path_list.append(path)
             x_points.append(self.x[:]) #current Positions append in a list 
             updat_x, alpha_z,nabla, rejected, tried_alpha = self.step()
-            #print(f"The current next step is: {updat_x}")
             alpha_list.append(alpha_z)
             stepz.append(updat_x)
             norm = np.linalg.norm(nabla)
             converlist.append(norm)
-            #print(f"The current Alphaz list is: {alpha_list}")c
-            #print(f'The gradient is: {grad}')
-            #print(np.linalg.norm(nabla),"CG norm gradient")
-            #print(grad_con, "This is the Gradient norm")
-            #print( np.linalg.norm(gradient_list), "This is the gradietn list norm")
-            #print(f'This is the Penalty For our CG: {penalty_list} ')
-            #print(f"alpha that has been searched:  {alpha_tried}")
-            #print(f"Alphat that been rejected: {alpha_rejected}")
-            #print(f'The points we have benn: {x_points}')
             k +=1
             if np.linalg.norm(nabla) < ep: #Termination Condition
                 print(f'The Gradient is: {nabla} and is absolute value is {np.linalg.norm(nabla)}, and stopped at: {self.x[k]} away from converging')
                 break 
-            
-            #print(f"The iteration is: {k}") 
+
         return [x_points,updat_x,func_values, nabla,stepz,alpha_list,rejected, tried_alpha,penalty_list,path_list,smooth_list,converlist] #Return current position, alphas list, x position, function values
     

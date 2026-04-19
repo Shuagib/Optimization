@@ -1,7 +1,7 @@
 from scipy.optimize import minimize
 import numpy as np 
 import matplotlib.pyplot as plt
-from Smooth import *
+from F_S import *
 from F_L import *
 from F_O import *
 from GD import *
@@ -14,21 +14,22 @@ Ob2 = plt.Circle(( 6.0 , 7.0), 3,color="darkorange", zorder= 2)
 
 x = trajectory_path #Is already flatten to 1D 
 
-
+# Bechmark for Conjugate Gradient
 fun = lambda x: objective_function(x,N_amount, x_start ,x_goal ,D_matrix,ob_main,l,m)
 
 CD_Scipy_Optimal_path = minimize(fun,x,method= 'CG',jac=True,tol=0.0001,options={'maxiter': 50,'disp': True, })
 
 minimize_line = np.reshape(CD_Scipy_Optimal_path.x,(-1,2))
 
-
-
+print("-" * 30)
 print(f'After {N_amount} this is what we found from CD : \n',f'The Optimal Path found by Conjugate Descent: {optimal_path_CG} \n ' + 
       f'My_CG Gradient convergencee {np.linalg.norm(gradient_CG)} \n' + 
         f'My_CGThe last function evaluation: {funcv[-1]} \n' + 
         f' For comparison using scipy.optimize Minimize using CG: {CD_Scipy_Optimal_path} ')
+print("-" * 30)
 
 
+# Plot for Conjugate Gradient and the benchmark
 get_path = unflatten(optimal_path_CG, N_amount, x_start, x_goal)
 
 fig, ax = plt.subplots(figsize=(8, 8))
@@ -56,32 +57,28 @@ ax.grid(True, linestyle='--', alpha=0.4)
 plt.tight_layout()
 plt.show()
 
+# Bechmark for Nelder-Mead
+
+# Create a wrapper for Scipy 
+func_no_grad = lambda x_flat: objective_function(x_flat, N_amount, x_start, x_goal, D_matrix, ob_main, l, m)[0]
 
 
-
-
-# Create a wrapper for Scipy (since it only wants the score, not the gradient)
-func_no_grad = lambda x_flat: objective_function(
-    x_flat, N_amount, x_start, x_goal, D_matrix, ob_main, l, m)[0]
-
-
-# 2. Run Scipy's version of Nelder-Mead
+# Scipy's version of Nelder-Mead
 print("\nRunning Scipy Nelder-Mead for benchmark...")
+
 NM_Scipy_Result = minimize(func_no_grad, x, method='Nelder-Mead', tol=0.01, options={'maxiter': 1000})
 
-# Process Results for plotting
+
 scipy_nm_coords = unflatten(NM_Scipy_Result.x, N_amount, x_start, x_goal)
 
 # 3. Final Benchmark Comparison
 print("-" * 30)
-print(f"BENCHMARK RESULTS (N={N_amount})")
-print("-" * 30)
-
 print(f"Scipy NM Final Cost: {NM_Scipy_Result.fun:.6f}")
 print(f"Scipy Success:       {NM_Scipy_Result.success}")
 print(f"Scipy Iterations:    {NM_Scipy_Result.nit}")
 print("-" * 30)
 
+# Plotting
 fig, ax = plt.subplots(figsize=(8, 6))
 
 # Obstacles

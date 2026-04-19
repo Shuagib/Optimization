@@ -1,5 +1,5 @@
 import numpy as np
-import Smooth as sm
+import F_S as sm
 from objective_func import objective_function
 from Path import *
 from F_O import f_O, f_O_2
@@ -24,12 +24,6 @@ class NMOptimizer:
         self.N = N
         self.l = l
         self.m = m
-
-    def get_objective(self, x_flat):
-        """External objective function using class attributes."""
-        ob_func, ob_grad = objective_function(
-            x_flat, self.N, self.x_start, self.x_goal, D_matrix, self.obj, self.l, self.m)
-        return ob_func  # Nelder-Mead only needs the value, not the gradient
     
     def get_objective(self, x_flat):
         """External objective function using class attributes."""
@@ -64,7 +58,6 @@ class NMOptimizer:
             current_best_f = f(simplex[0])
             f_history.append(current_best_f)
             path_history.append(simplex[0].copy())
-            print(f"Iteration {iteration}: best f = {current_best_f:.6f}")
 
             # Best point (x1), worst point (xn+1), and second worst (xn)
             x1 = simplex[0]
@@ -72,11 +65,7 @@ class NMOptimizer:
             x_worst = simplex[-1]
             
             #Termination condition, Using the standard deviation of function values across the simplex
-            # f_vals = [f(v) for v in simplex]
             if abs(f(simplex[0]) - f_prev_best) < tol:
-            #if np.std(f_vals) < tol:
-                print(f"Converged at iteration {iteration}")
-                print(f"Converged at iteration {iteration}, final f = {current_best_f:.6f}")
                 break
 
             # Centroid 
@@ -120,15 +109,12 @@ class NMOptimizer:
         return simplex[0], f_history, path_history
 
     def run(self, initial_path, **kwargs):
-        """Helper to flatten, run NM, and unflatten the result."""
+        """Function to flatten, run NM, and unflatten the result."""
         x_initial_flat = sm.flatten(initial_path)
 
-        
-        print("Starting Nelder-mead...")
+        print(f"--- Starting Starting Nelder-Mead ---")
         optimized_flat, f_history, path_history = self.nelder_mead(x_initial_flat, **kwargs)
-        
         final_path = sm.unflatten(optimized_flat, self.N, self.x_start, self.x_goal)
-        
         print(f"Optimization complete. Final objective value: {self.get_objective(optimized_flat):.6f}")
         
         return final_path, f_history, path_history

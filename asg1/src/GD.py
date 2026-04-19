@@ -4,7 +4,7 @@ from line_search import backtracking_line_search
 import autograd.numpy as an
 from F_L import func_L
 from F_O import f_O,f_O_2
-from Smooth import smoothness_residuals
+from F_S import smoothness_residuals
 class DescentMethod:
     alpha : float 
 
@@ -51,18 +51,17 @@ class GradientDescent(DescentMethod):
         pathlist = []
         smothlist = []
 
-
+        print(f"--- Starting Gradient Descent (Max Iterations: {kmax}) ---")
+        
         while k < kmax:
             fx, nabla =  objective_function(self.x,self.n, self.start , self.goal ,self.D,self.obj,self.lam,self.mu)
             smooth = smoothness_residuals(self.x,self.n,self.start,self.goal,self.D)
             penalty = f_O_2(self.x,self.obj, self.alpha)
             lenpath = func_L(self.x)
           
-           
             smothlist.append(smooth)
             f_values.append(fx)
             penlist.append(penalty)
-            print(f'GD {penlist}')
 
             pathlist.append(lenpath)
           

@@ -1,17 +1,16 @@
 import numpy as np 
 import matplotlib.pyplot as plt
-from Smooth import *
+from F_S import *
 from F_L import *
 from F_O import *
 from GD import *
 from Nelder_mead import *
 from CG import * 
-from numpy import random as ra
 
 #Choose start and Goal
 start_point  = (0.5,0.0)
 end_point = (19.0,22.0)
-
+ob_main = [((16.0, 19.0), 3), (( 6.0 , 7.0), 3)]
 
 start_point_x, start_point_y = start_point
 end_point_x, end_point_y = end_point
@@ -25,7 +24,6 @@ N_amount = 20
 x_axis = np.linspace(start_point_x, end_point_x, N_amount)
 y_axis = np.linspace(start_point_y, end_point_y, N_amount)
 
-# Let's visalize it 
 l = 2 #Smoothness
 m = 15 #Penalty
 D_matrix = build_D(N_amount)
@@ -36,6 +34,7 @@ x_goal = np.array([end_point_x, end_point_y])
 
 
 initial_path = np.column_stack((x_axis, y_axis))
+trajectory_path = flatten(initial_path)
 # noise = ra.normal(0.01, size = initial_path.shape)
 # noise[0] = [0.0,0.0]
 # noise[-1] = [0.0,0.0]
@@ -44,19 +43,9 @@ initial_path = np.column_stack((x_axis, y_axis))
 #Fixing porblem with Noise problems 
 
 
-trajectory_path = flatten(initial_path)
-
-
-ob_main = [((16.0, 19.0), 3), (( 6.0 , 7.0), 3)]
-
-
-#print(len(travel_x),"The rigt Amount is:")
-#print(f_value, "The right amount is " ) 
-#print(len(alphz), "")
-
-
 
 def plotting_pathevolution(path_evolution):
+    """Visualizes the step-by-step progress of the path optimization.."""
     #Plotting the Evolutions pr. iteration. Iteration = N_Amount
     iteration_pr_plot = [0, 1, 2,3,4,5,6,7,8] # The first 9 plots
     _, axes = plt.subplots(3, 3, figsize=(15, 5)) #Creating 3 rows and 3 coloums 3x3 = 9 pictures 
@@ -67,7 +56,6 @@ def plotting_pathevolution(path_evolution):
         col = id % 3  #Using 3 Coloums each col [] 
         path_evalutions = unflatten(path_evolution[i], N_amount, x_start, x_goal)
         #Ends with a plot: axes[0,0]  axes[0,1]  axes[0,2]  axes[0,3] axes[1,0]  axes[1,1]  axes[1,2]  axes[1,3] ...
-
 
         xes = path_evalutions[:,0] #Getting the xis of the vector
         yis = path_evalutions[:,1] #Getting the yis of the vector
@@ -91,27 +79,8 @@ def plotting_pathevolution(path_evolution):
 
 
 def plotting_Gradient_Descent(optimal_path,gradientz,func_v,alphz):
-    #Plotting the Evolutions pr. iteration. Iteration = N_Amount
+    """ Plots the final results and convergence diagnostics for Gradient Descent."""
     fig, axes = plt.subplots(1, 4, figsize=(15, 5))
-  
-    # for i in range(len(path_evolution)):
-    #     last_run = unflatten(path_evolution[0], N_amount, x_start, x_goal)
-    #     xes = last_run[:,0]
-    #     yis = last_run[:,1]
-    #     axes[0].plot(xes, yis,color="orange",marker='o')
-
-    # axes[0].add_patch(plt.Circle((16.0, 19.0), 3, color='darkorange', alpha=0.5))
-    # axes[0].add_patch(plt.Circle((11.0, 14.0), 3, color='darkorange', alpha=0.5))
-    # axes[0].plot(start_point_x, start_point_y, 's', color='black', markersize=10, label='start')
-    # axes[0].plot(end_point_x, end_point_y, 's', color='black', markersize=10, label='goal')
-    # axes[0].set_aspect('equal', adjustable='box')
-    # axes[0].legend()
-    # axes[0].set_title('Path Evolution Gradient Descent')
-  
-
-
-
- 
 
     get_path = unflatten(optimal_path, N_amount, x_start, x_goal)
     xes = get_path[:,0]
@@ -125,16 +94,11 @@ def plotting_Gradient_Descent(optimal_path,gradientz,func_v,alphz):
     axes[0].legend()
     axes[0].set_title(' Optimal path Gradient Descent')
 
-
-
     #Convergence of gradient magnitude
     axes[1].plot(gradientz,color='blue')
     axes[1].set_xlabel('Points at each gradient',fontsize='10')
     axes[1].set_ylabel('Iterations',fontsize='10')
     axes[1].set_title('Magnitude of Change',fontsize='10')
- 
-
-
 
     # Convergence of function evalutions 
     axes[2].plot(func_v)
@@ -154,18 +118,14 @@ def plotting_Gradient_Descent(optimal_path,gradientz,func_v,alphz):
 
 
 
-#print(len(x_points), "This is the lenght")
-#print(len(func_values), "This is the the amount of function evaluations")
-#print(len(alpha_list), "This is the amount of alphas")
-
-
-####Plotting Conjugate Gradient 
+# Plotting Conjugate Gradient 
 
 
 def plotting_CG_Path(optimal_path,func_v,gradlist,alpha_z,alpha_rejected, alpha_tried_alpha):
+    """Plots the final results and diagnostics for Conjugate Gradient optimization."""
+
     _, axes = plt.subplots(1, 4, figsize=(15, 5))
    
-
     get_path = unflatten(optimal_path, N_amount, x_start, x_goal)
     xes = get_path[:,0]
     yis = get_path[:,1]
@@ -178,25 +138,17 @@ def plotting_CG_Path(optimal_path,func_v,gradlist,alpha_z,alpha_rejected, alpha_
     axes[0].legend()
     axes[0].set_title('Optimal Path Conjugate Gradient',fontsize = '10')
 
-
-
-    #Convergence of gradient magnitude
+    # Convergence of gradient magnitude
     axes[1].plot(gradlist,color='blue')
     axes[1].set_xlabel('Iterations',fontsize='10')
     axes[1].set_ylabel('Gradient Evaluation',fontsize='10')
     axes[1].set_title('Magnitude of Change',fontsize='10')
-
- 
-
-
 
     # Convergence of function evalutions 
     axes[2].plot(func_v)
     axes[2].set_xlabel('Iteration',fontsize='10')
     axes[2].set_ylabel('Evaluations',fontsize='10')
     axes[2].set_title('Function values Conjugate Gradient',fontsize='10')
-
- 
     axes[2].grid()
 
     #Plotting the Alpha's to show that they varies, Why does my alpha intialstart do 
@@ -211,18 +163,16 @@ def plotting_CG_Path(optimal_path,func_v,gradlist,alpha_z,alpha_rejected, alpha_
 
     
 
-
-
 # Creating a plot for the penalty function and path functions
 
 def plot_convergence(penal_GD,Path_GD,Penal_CG,path_GC,N,SmGD,SmCg,gradientCG,gradientGD):
+    """Provides comparison between GD and CG solvers."""
     fig, ax = plt.subplots(1,4,figsize=(15, 5))
     x_axis = [i for i in range(0,N)]
     y_CG_path = path_GC
     y_CG_cost = Penal_CG
     y_GD_path = Path_GD
     y_GD_cost= penal_GD
-
  
     #Plooting path function
     ax[0].plot(x_axis,y_CG_path, color = 'crimson',label='CD',linestyle = ':')
@@ -230,7 +180,6 @@ def plot_convergence(penal_GD,Path_GD,Penal_CG,path_GC,N,SmGD,SmCg,gradientCG,gr
     ax[0].set_xlabel("Iterations")
     ax[0].set_ylabel("Path lenght")
     ax[0].set_title("Path Function: GD vs CG")
-  
     ax[0].grid()
 
     #Plotting Penalty cost 
@@ -252,32 +201,24 @@ def plot_convergence(penal_GD,Path_GD,Penal_CG,path_GC,N,SmGD,SmCg,gradientCG,gr
     ax[3].set_xlabel('Iterations')
     ax[3].set_ylabel('Convergence of Gradient')
     ax[3].set_title('Gradient Convergence: GD vs CG')
-   
-   
-    
-   
     
     plt.tight_layout()
     plt.show()
 
 
 def plotting_nelder_evolution(path_history, N_amount, x_start, x_goal):
-#The list of flattened paths returned by the optimizer"
-
+    """Visualizes the evolution of the Nelder-Mead simplex search."""
     max_idx = len(path_history) - 1
     iterations_to_plot = [1, 50, 100, 200, 300, 500, 700, 850, max_idx] 
     
     fig, axes = plt.subplots(3, 3, figsize=(8, 8)) 
-
     for id, i in enumerate(iterations_to_plot):
-        # Clamp index to ensure we don't crash if it converged early
+
         idx = min(i, max_idx)
-        
         row = id // 3
         col = id % 3
         ax = axes[row, col]
 
-        # Use the sm.unflatten utility from your class setup
         path_coords = unflatten(path_history[idx], N_amount, x_start, x_goal)
 
         xes = path_coords[:, 0]
@@ -289,7 +230,7 @@ def plotting_nelder_evolution(path_history, N_amount, x_start, x_goal):
         ax.add_patch(plt.Circle((16.0, 19.0), 3.0, color='darkorange'))
         ax.add_patch(plt.Circle((6.0, 7.0), 3.0, color='darkorange'))
         
-        # Start/End points
+        # Start & end points
         ax.plot(x_start[0], x_start[1], 's', color='black', label="Start")
         ax.plot(x_goal[0], x_goal[1], 's', color='black', label="Goal")
         
@@ -303,17 +244,12 @@ def plotting_nelder_evolution(path_history, N_amount, x_start, x_goal):
     plt.show()
 
 
-
 optimizer = NMOptimizer(x_start, x_goal, ob_main, N_amount, l, m)
 final_path, f_vals, path_evolution = optimizer.run(path, max_iter=1000)
 
 
 def plotting_NM(optimal_path, f_history, path_history):
-    """
-    optimal_path: The final unflattened path
-    f_history: The list of best objective values per iteration
-    path_history: The list of all best flattened paths (to calculate simplex change)
-    """
+    """ Plots diagnostics for the Nelder-Mead (NM) optimization process."""
     fig, axes = plt.subplots(1, 3, figsize=(15, 5))
    
     # Plot the optimal path with obstacles etc.
@@ -331,7 +267,7 @@ def plotting_NM(optimal_path, f_history, path_history):
     # Measuring how much the best path changed from the previous iteration
     path_changes = [np.linalg.norm(path_history[i] - path_history[i-1]) for i in range(1, len(path_history))]
     axes[1].plot(path_changes, color='blue')
-    axes[1].set_yscale('log') # For convergence
+    axes[1].set_yscale('log') 
     axes[1].set_xlabel('Iterations')
     axes[1].set_ylabel('Path Displacement')
     axes[1].set_title('Step Magnitude (Simplex Movement)')
@@ -347,8 +283,6 @@ def plotting_NM(optimal_path, f_history, path_history):
     plt.show()
 
 
-
-
 nm_penalties = []
 nm_smoothness = []
 nm_path_lens = []
@@ -360,6 +294,7 @@ for p_flat in path_evolution:
     nm_path_lens.append(func_L(p_coords))
 
 def plot_nm_diagnostics(path_lens, penalties, smoothness, total_f):
+    """ Deconstructs the Nelder-Mead objective function into its sub-components."""
     fig, axes = plt.subplots(1, 4, figsize=(15, 5))
     iterations = np.arange(len(path_lens))
 
@@ -394,7 +329,6 @@ def plot_nm_diagnostics(path_lens, penalties, smoothness, total_f):
 
 
 # #Starting all the plotting
-
 
 #Conjugate Gradient
 trav_path,optimal_path_CG,funcv,gradient_CG,stepx,alpha_list,rejected_list,alpha_tried_list,pena_list_CG,path_list_CG, smc, converlist = Conjugate_Gradient(trajectory_path, alpha0, l, m, ob_main, N_amount, D_matrix, x_start, x_goal).opt(N_amount)
