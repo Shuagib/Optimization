@@ -1,6 +1,6 @@
 import numpy as np 
 import matplotlib.pyplot as plt
-from smooth import *
+from Smooth import *
 from F_L import *
 from F_O import *
 from GD import *
@@ -26,7 +26,7 @@ N_amount = 20
 x_axis = np.linspace(start_point_x, end_point_x, N_amount)
 y_axis = np.linspace(start_point_y, end_point_y, N_amount)
 
-### Let's visalize it 
+# Let's visalize it 
 l = 2 #Smoothness
 m = 15 #Penalty
 D_matrix = build_D(N_amount)
@@ -348,9 +348,6 @@ def plotting_NM(optimal_path, f_history, path_history):
     plt.show()
 
 
-# Plot everything using those results
-# plotting_nelder_evolution(path_evolution, N_amount, x_start, x_goal)
-# plotting_NM(final_path, f_vals, path_evolution)
 
 
 nm_penalties = []
@@ -399,7 +396,6 @@ def plot_nm_diagnostics(path_lens, penalties, smoothness, total_f):
 
 # #Starting all the plotting
 
-# #Intializing Conjugate Gradient
 
 #Conjugate Gradient
 trav_path,optimal_path_CG,funcv,gradient_CG,stepx,alpha_list,rejected_list,alpha_tried_list,pena_list_CG,path_list_CG, smc, converlist = Conjugate_Gradient(trajectory_path, alpha0, l, m, ob_main, N_amount, D_matrix, x_start, x_goal).opt(N_amount)
@@ -410,18 +406,18 @@ trav_x, optimal_x, f_values, alphz, stepz, gradlist, pathlist_GD, penlist_GD, SM
 
 
 
-#plotting_pathevolution(trav_x)
+plotting_pathevolution(trav_x)
 
 
-#plotting_pathevolution(trav_path)
-
-
-
-#plotting_CG_Path(optimal_path_CG,funcv,gradient_CG,alpha_list,rejected_list,alpha_tried_list)
+plotting_pathevolution(trav_path)
 
 
 
-#plotting_Gradient_Descent(optimal_x,gradlist,f_values,alphz)
+plotting_CG_Path(optimal_path_CG,funcv,gradient_CG,alpha_list,rejected_list,alpha_tried_list)
+
+
+
+plotting_Gradient_Descent(optimal_x,gradlist,f_values,alphz)
 
 
 
@@ -434,7 +430,7 @@ SmootnnessC = smc
 
 plot_convergence(penalty_GradientDescent,path_GradientDescent,Penalty_ConjugateGradient,path_ConjugateGradient,N_amount,smoothnessG,SmootnnessC,converlist,converlistG)
 
-
+# Nelder mead plot
 plotting_nelder_evolution(path_evolution, N_amount, x_start, x_goal)
 
 plotting_NM(final_path, f_vals, path_evolution)
