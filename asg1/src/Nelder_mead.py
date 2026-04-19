@@ -124,8 +124,6 @@ class NMOptimizer:
         """Helper to flatten, run NM, and unflatten the result."""
         x_initial_flat = sm.flatten(initial_path)
 
-        print(f"DEBUG: Flattened size is {len(x_initial_flat)}")
-        print(f"DEBUG: Expected size for N={self.N} is {(self.N-2)*2}")
         
         print("Starting Nelder-mead...")
         optimized_flat, f_history, path_history = self.nelder_mead(x_initial_flat, **kwargs)
