@@ -6,7 +6,6 @@ from F_L import *
 from F_O import *
 from GD import *
 from CG import * 
-from quasi import *
 from Visualization import gradient_CG, funcv, trajectory_path,x_start,x_goal,D_matrix,ob_main,l,m,optimal_path_CG,N_amount
 from Nelder_mead import *
 

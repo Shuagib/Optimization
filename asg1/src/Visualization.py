@@ -6,7 +6,6 @@ from F_O import *
 from GD import *
 from Nelder_mead import *
 from CG import * 
-from quasi import *
 from numpy import random as ra
 
 #Choose start and Goal
