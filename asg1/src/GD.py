@@ -4,7 +4,7 @@ from line_search import backtracking_line_search
 import autograd.numpy as an
 from F_L import func_L
 from F_O import f_O,f_O_2
-from smooth import smoothness_residuals
+from Smooth import smoothness_residuals
 class DescentMethod:
     alpha : float 
 

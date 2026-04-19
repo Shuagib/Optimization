@@ -5,7 +5,7 @@ import torch as tp
 import math as ma
 import F_L as fl
 import F_O as fo
-import smooth as sm
+import Smooth as sm
 
 alpha_0 = 0.5
 

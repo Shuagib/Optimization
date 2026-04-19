@@ -1,7 +1,7 @@
 from objective_func import objective_function
 import numpy as np
 from line_search import  strong_backtracking
-from smooth import flatten as fl,gradient_smoothness,smoothness_residuals
+from Smooth import flatten as fl,gradient_smoothness,smoothness_residuals
 import autograd.numpy as an
 from F_O import f_O,f_O_2
 from F_L import func_L

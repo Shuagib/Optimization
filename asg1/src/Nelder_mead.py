@@ -1,6 +1,5 @@
 import numpy as np
-import smooth as sm
-from smooth import build_D
+import Smooth as sm
 from objective_func import objective_function
 from Path import *
 from F_O import f_O, f_O_2
@@ -10,7 +9,7 @@ path = np.column_stack((x_axis,y_axis))
 alpha = 1
 #l = 3 #Smoothness
 #m = 15 #Penalty
-D_matrix = build_D(N_amount)
+D_matrix = sm.build_D(N_amount)
 alpha0 = 1
 ob_main = [((16.0, 19.0), 3), (( 6.0 , 7.0), 3)]
 
