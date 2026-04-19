@@ -369,18 +369,3 @@ plotting_nelder_evolution(path_evolution, N_amount, x_start, x_goal)
 plotting_NM(final_path, f_vals, path_evolution)
 
 plot_nm_diagnostics(nm_path_lens, nm_penalties, nm_smoothness, f_vals)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
